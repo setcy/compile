@@ -74,16 +74,19 @@
 
 #include "tree.c"
 
+extern int hasError;
+
 int yylex(void);
 
-void yyerror(const char *str){
-    fprintf(stderr, "error:%s\n",str);
+void yyerror(const char *str) {
+    hasError = 1;
+    fprintf(stderr, "Error type B at Line %d: %s\n", yylineno, str);
 }
 
 TreeNode* root;
 
 
-#line 87 "yacc.tab.c"
+#line 90 "yacc.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -163,7 +166,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 18 "yacc.y"
+#line 21 "yacc.y"
 
   int intValue;
   double floats;
@@ -172,7 +175,7 @@ union YYSTYPE
   int lineno;
   TreeNode* tree_node;
 
-#line 176 "yacc.tab.c"
+#line 179 "yacc.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -615,16 +618,16 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  2
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   154
+#define YYLAST   165
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  34
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  45
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  90
+#define YYNRULES  100
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  157
+#define YYNSTATES  167
 
 /* YYMAXUTOK -- Last valid token kind.  */
 #define YYMAXUTOK   288
@@ -676,16 +679,17 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,    44,    44,    48,    54,    58,    64,    71,    75,    81,
-      89,    93,    98,   102,   110,   114,   119,   123,   128,   137,
-     142,   151,   155,   160,   164,   172,   176,   181,   185,   190,
-     201,   205,   209,   215,   219,   224,   228,   233,   241,   244,
-     249,   256,   261,   269,   273,   278,   282,   288,   295,   300,
-     304,   313,   321,   326,   331,   339,   346,   349,   354,   360,
-     367,   373,   379,   383,   389,   395,   399,   406,   413,   416,
-     421,   425,   430,   434,   439,   443,   449,   457,   461,   467,
-     475,   479,   485,   491,   497,   505,   509,   515,   523,   529,
-     535
+       0,    47,    47,    51,    57,    61,    67,    72,    75,    79,
+      85,    93,    97,   102,   106,   114,   118,   123,   127,   132,
+     139,   142,   147,   156,   160,   165,   169,   177,   181,   186,
+     190,   195,   204,   207,   211,   215,   221,   225,   230,   234,
+     239,   247,   250,   253,   256,   263,   266,   269,   277,   284,
+     289,   293,   299,   306,   307,   312,   313,   317,   326,   334,
+     339,   340,   345,   346,   352,   355,   362,   365,   370,   376,
+     383,   389,   395,   399,   405,   411,   415,   422,   429,   432,
+     437,   441,   446,   450,   455,   459,   465,   473,   477,   483,
+     491,   495,   501,   507,   513,   521,   525,   531,   539,   545,
+     551
 };
 #endif
 
@@ -724,7 +728,7 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 }
 #endif
 
-#define YYPACT_NINF (-130)
+#define YYPACT_NINF (-110)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -738,22 +742,23 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int16 yypact[] =
 {
-    -130,    32,  -130,  -130,  -130,  -130,  -130,   -14,     4,    51,
-    -130,  -130,    14,    27,    30,    36,    44,    51,  -130,    54,
-    -130,  -130,  -130,    30,    68,    39,  -130,   -17,  -130,    51,
-      61,    76,    70,    74,   -17,  -130,   -17,  -130,  -130,  -130,
-       7,  -130,  -130,    69,  -130,  -130,  -130,  -130,    90,    77,
-    -130,  -130,  -130,   -17,    63,    41,  -130,    41,    83,    80,
-     -17,   -17,  -130,  -130,    87,  -130,    91,   -17,  -130,    68,
-      89,   -17,  -130,  -130,   -17,   -17,   -17,   -17,    68,    68,
-      92,    97,    41,    57,    73,  -130,  -130,   101,  -130,  -130,
-      99,   102,   104,    69,   103,   107,  -130,  -130,    63,    63,
-    -130,   118,    80,   108,   100,   -17,   -17,   -17,   -17,   -17,
-     -17,   100,   -17,  -130,  -130,    -6,    89,  -130,  -130,    33,
-      92,  -130,   128,    41,    41,    41,    41,    57,    57,  -130,
-      99,    -6,  -130,  -130,  -130,    33,  -130,  -130,  -130,   100,
-    -130,  -130,   111,   117,   113,   119,  -130,    -6,  -130,  -130,
-      33,  -130,  -130,   111,   113,  -130,  -130
+    -110,    17,  -110,  -110,  -110,  -110,  -110,    20,    42,    22,
+    -110,  -110,    39,    10,    64,    24,  -110,    75,    22,  -110,
+      13,  -110,  -110,  -110,    64,  -110,    90,    47,  -110,   104,
+    -110,    22,    73,    86,     0,     2,   104,  -110,   104,  -110,
+    -110,  -110,    38,  -110,  -110,    81,  -110,  -110,  -110,  -110,
+     105,     3,  -110,  -110,  -110,   104,   -12,    35,  -110,    35,
+      21,    84,   104,   104,  -110,  -110,  -110,  -110,    11,  -110,
+      96,   104,  -110,    90,    99,   104,  -110,  -110,  -110,   104,
+     104,   104,   104,  -110,    90,    90,   114,    97,    35,    88,
+      67,  -110,  -110,   116,  -110,  -110,  -110,   117,   119,   129,
+      81,    12,    14,  -110,  -110,   -12,   -12,  -110,   132,    84,
+      15,    91,   104,   104,   104,   104,   104,   104,    91,   104,
+    -110,  -110,    45,    99,  -110,  -110,  -110,  -110,   106,   114,
+    -110,  -110,   138,    35,    35,    35,    35,    88,    88,  -110,
+     117,    45,  -110,  -110,  -110,   106,  -110,  -110,  -110,    91,
+    -110,  -110,   121,   127,   123,   130,  -110,    45,  -110,  -110,
+     106,  -110,  -110,   121,   123,  -110,  -110
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -761,42 +766,43 @@ static const yytype_int16 yypact[] =
    means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       3,     0,     1,    31,    32,    30,     2,     0,     0,    34,
-       7,     8,     0,     0,    36,    39,     0,     0,    33,     0,
-      37,    44,    29,    36,    41,     0,    35,     0,    38,     0,
-       0,     0,     0,     0,    57,    42,     0,    68,    69,    64,
-      41,    45,     4,     0,     5,    49,    43,    46,    62,     0,
-      65,    63,    74,     0,    77,    60,    62,    90,     0,     0,
-       0,     0,    52,    53,     0,    56,     0,    71,    59,    41,
-      22,     0,    48,    67,     0,     0,     0,     0,    41,    41,
-      11,     0,    80,    85,    88,    89,    58,     0,    54,    61,
-      73,     0,    19,     0,     0,     0,    75,    76,    78,    79,
-      40,     0,     0,     0,     0,     0,     0,     0,     0,     0,
-       0,     0,     0,    70,    66,     0,    22,    18,    47,     0,
-      11,     6,     0,    81,    82,    83,    84,    86,    87,    51,
-      73,    26,    20,    23,    21,    15,     9,    12,    10,     0,
-      50,    72,    28,     0,    17,     0,    55,     0,    25,    24,
-       0,    14,    13,    28,    17,    27,    16
+       3,     0,     1,    34,    35,    33,     2,     0,     0,    37,
+       8,     9,     0,     0,    39,    42,    32,     0,     0,    36,
+       0,    40,    49,    31,    39,    43,    45,     0,    38,     0,
+      41,     0,     0,     0,     0,     0,    67,    47,     0,    78,
+      79,    74,    45,    50,     4,     0,     5,    56,    48,    51,
+      72,     0,    75,    73,    84,     0,    87,    70,    72,   100,
+       0,     0,     0,     0,    60,    59,    62,    61,     0,    66,
+       0,    81,    69,    45,    24,     0,    55,    54,    77,     0,
+       0,     0,     0,    46,    45,    45,    12,     0,    90,    95,
+      98,    99,    68,     0,    64,    63,    71,    83,     0,    21,
+       0,     0,     0,    85,    86,    88,    89,    44,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+      80,    76,     0,    24,    20,    19,    53,    52,     0,    12,
+       7,     6,     0,    91,    92,    93,    94,    96,    97,    58,
+      83,    28,    22,    25,    23,    16,    10,    13,    11,     0,
+      57,    82,    30,     0,    18,     0,    65,     0,    27,    26,
+       0,    15,    14,    30,    18,    29,    17
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int16 yypgoto[] =
 {
-    -130,  -130,  -130,  -130,   -12,    40,    21,  -129,  -130,   -10,
-    -130,    50,    29,  -127,  -130,    -7,  -130,  -130,  -130,   124,
-     131,  -130,   -39,   133,  -130,  -130,  -102,  -130,  -130,    93,
-     -20,   -26,  -130,  -130,   -50,  -130,  -130,    20,    19,   -27,
-     -11,  -130,  -130,  -130,   125
+    -110,  -110,  -110,  -110,    -3,    41,    23,   -90,  -110,   -11,
+    -110,    54,    32,   -96,  -110,    -7,  -110,  -110,  -110,   133,
+     140,  -110,   -36,   142,  -110,  -110,  -109,  -110,  -110,    98,
+     -22,   -28,  -110,  -110,   -48,  -110,  -110,    25,    27,   -29,
+     -24,  -110,  -110,  -110,   131
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_uint8 yydefgoto[] =
 {
-       0,     1,    41,    42,    12,    80,   103,   136,   145,   151,
-      44,    70,    94,   132,   143,   148,     6,     7,    13,    18,
-      14,    20,    28,    45,    25,    46,    47,   140,    64,    81,
-      56,    49,    50,    51,    52,    53,    91,   113,    54,    55,
-      83,    84,    85,    86,   137
+       0,     1,    43,    44,    12,    86,   110,   146,   155,   161,
+      46,    74,   101,   142,   153,   158,     6,     7,    13,    19,
+      14,    21,    30,    47,    27,    48,    49,   150,    68,    87,
+      58,    51,    52,    53,    54,    55,    98,   120,    56,    57,
+      89,    90,    91,    92,   147
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -804,42 +810,44 @@ static const yytype_uint8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_uint8 yytable[] =
 {
-      57,    68,   122,    73,   142,    48,   144,    36,    65,   129,
-      66,    37,    38,    43,   131,    39,    40,    59,    36,     8,
-     153,   154,    37,    38,    96,    97,    39,    40,     9,    27,
-      92,    67,     2,    82,    82,     3,     4,   146,     5,   100,
-     101,    90,    10,    11,    29,    95,    30,    15,    31,    32,
-      33,    34,    16,   135,    10,    11,    17,    36,    19,    21,
-      35,    37,    38,    36,    21,    39,    40,    37,    38,    76,
-      77,    39,    40,   105,   106,   107,   108,    24,   123,   124,
-     125,   126,    82,    82,    48,    60,   130,   109,   110,   133,
-      27,    48,    57,    74,    75,    98,    99,    62,   127,   128,
-      61,    63,    69,    71,    72,   133,    78,    30,    57,    31,
-      32,    33,    34,    79,    88,    93,    89,   115,   102,    48,
-      21,   133,   104,    57,    36,   112,   111,   114,    37,    38,
-     117,   119,    39,    40,   118,   121,   139,   147,   149,   150,
-     152,   138,   120,   116,   156,   134,   155,    26,    23,    22,
-     141,     0,    58,     0,    87
+      59,    64,   132,    66,    76,    50,    72,    78,    69,   139,
+      70,    16,    94,   124,    25,   126,   130,     2,    79,    80,
+       3,     4,    83,     5,    45,    10,    11,    65,    61,    67,
+      77,   103,   104,    88,    88,    17,    26,    99,    95,   125,
+     156,   127,   131,    97,    84,   152,    20,   102,   107,   108,
+      10,    11,    31,     8,    32,   154,    33,    34,    35,    36,
+      29,   163,    71,    81,    82,   141,     9,    22,    37,    38,
+     164,    38,    15,    39,    40,    39,    40,    41,    42,    41,
+      42,   116,   117,   133,   134,   135,   136,    88,    88,    50,
+      18,   140,   137,   138,   143,    22,    50,    62,    32,    59,
+      33,    34,    35,    36,   112,   113,   114,   115,   105,   106,
+      63,    22,    29,   143,    73,    38,    59,    85,    75,    39,
+      40,    96,   111,    41,    42,   100,   145,    50,    38,   143,
+      38,    59,    39,    40,    39,    40,    41,    42,    41,    42,
+     109,   118,   122,   119,   121,   128,   149,   157,   159,   160,
+     129,   162,   148,   166,   123,   144,   165,    28,    24,    23,
+      60,    93,     0,     0,     0,   151
 };
 
 static const yytype_int16 yycheck[] =
 {
-      27,    40,   104,    53,   131,    25,   135,    24,    34,   111,
-      36,    28,    29,    25,    20,    32,    33,    29,    24,    33,
-     147,   150,    28,    29,    74,    75,    32,    33,    24,    22,
-      69,    24,     0,    60,    61,     3,     4,   139,     6,    78,
-      79,    67,     3,     4,     5,    71,     7,    33,     9,    10,
-      11,    12,    25,    20,     3,     4,    26,    24,    22,    20,
-      21,    28,    29,    24,    20,    32,    33,    28,    29,    28,
-      29,    32,    33,    16,    17,    18,    19,    23,   105,   106,
-     107,   108,   109,   110,   104,    24,   112,    14,    15,   115,
-      22,   111,   119,    30,    31,    76,    77,    27,   109,   110,
-      24,    27,    33,    13,    27,   131,    23,     7,   135,     9,
-      10,    11,    12,    33,    27,    26,    25,    13,    26,   139,
-      20,   147,    25,   150,    24,    26,    25,    25,    28,    29,
-      27,    13,    32,    33,    27,    27,     8,    26,    21,    26,
-      21,   120,   102,    93,   154,   116,   153,    23,    17,    16,
-     130,    -1,    27,    -1,    61
+      29,     1,   111,     1,     1,    27,    42,    55,    36,   118,
+      38,     1,     1,     1,     1,     1,     1,     0,    30,    31,
+       3,     4,     1,     6,    27,     3,     4,    27,    31,    27,
+      27,    79,    80,    62,    63,    25,    23,    73,    27,    27,
+     149,    27,    27,    71,    23,   141,    22,    75,    84,    85,
+       3,     4,     5,    33,     7,   145,     9,    10,    11,    12,
+      22,   157,    24,    28,    29,    20,    24,    20,    21,    24,
+     160,    24,    33,    28,    29,    28,    29,    32,    33,    32,
+      33,    14,    15,   112,   113,   114,   115,   116,   117,   111,
+      26,   119,   116,   117,   122,    20,   118,    24,     7,   128,
+       9,    10,    11,    12,    16,    17,    18,    19,    81,    82,
+      24,    20,    22,   141,    33,    24,   145,    33,    13,    28,
+      29,    25,    25,    32,    33,    26,    20,   149,    24,   157,
+      24,   160,    28,    29,    28,    29,    32,    33,    32,    33,
+      26,    25,    13,    26,    25,    13,     8,    26,    21,    26,
+     109,    21,   129,   164,   100,   123,   163,    24,    18,    17,
+      29,    63,    -1,    -1,    -1,   140
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
@@ -847,18 +855,19 @@ static const yytype_int16 yycheck[] =
 static const yytype_int8 yystos[] =
 {
        0,    35,     0,     3,     4,     6,    50,    51,    33,    24,
-       3,     4,    38,    52,    54,    33,    25,    26,    53,    22,
-      55,    20,    57,    54,    23,    58,    53,    22,    56,     5,
-       7,     9,    10,    11,    12,    21,    24,    28,    29,    32,
-      33,    36,    37,    38,    44,    57,    59,    60,    64,    65,
-      66,    67,    68,    69,    72,    73,    64,    73,    78,    38,
-      24,    24,    27,    27,    62,    65,    65,    24,    56,    33,
-      45,    13,    27,    68,    30,    31,    28,    29,    23,    33,
-      39,    63,    73,    74,    75,    76,    77,    63,    27,    25,
-      65,    70,    56,    26,    46,    65,    68,    68,    72,    72,
-      56,    56,    26,    40,    25,    16,    17,    18,    19,    14,
-      15,    25,    26,    71,    25,    13,    45,    27,    27,    13,
-      39,    27,    60,    73,    73,    73,    73,    74,    74,    60,
+       3,     4,    38,    52,    54,    33,     1,    25,    26,    53,
+      22,    55,    20,    57,    54,     1,    23,    58,    53,    22,
+      56,     5,     7,     9,    10,    11,    12,    21,    24,    28,
+      29,    32,    33,    36,    37,    38,    44,    57,    59,    60,
+      64,    65,    66,    67,    68,    69,    72,    73,    64,    73,
+      78,    38,    24,    24,     1,    27,     1,    27,    62,    65,
+      65,    24,    56,    33,    45,    13,     1,    27,    68,    30,
+      31,    28,    29,     1,    23,    33,    39,    63,    73,    74,
+      75,    76,    77,    63,     1,    27,    25,    65,    70,    56,
+      26,    46,    65,    68,    68,    72,    72,    56,    56,    26,
+      40,    25,    16,    17,    18,    19,    14,    15,    25,    26,
+      71,    25,    13,    45,     1,    27,     1,    27,    13,    39,
+       1,    27,    60,    73,    73,    73,    73,    74,    74,    60,
       65,    20,    47,    65,    46,    20,    41,    78,    40,     8,
       61,    71,    47,    48,    41,    42,    60,    26,    49,    21,
       26,    43,    21,    47,    41,    49,    43
@@ -867,11 +876,12 @@ static const yytype_int8 yystos[] =
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr1[] =
 {
-       0,    34,    35,    35,    36,    36,    37,    38,    38,    39,
-      40,    40,    41,    41,    42,    42,    43,    43,    44,    45,
-      45,    46,    46,    47,    47,    48,    48,    49,    49,    50,
-      51,    51,    51,    52,    52,    53,    53,    54,    55,    55,
-      56,    56,    57,    58,    58,    59,    59,    60,    60,    60,
+       0,    34,    35,    35,    36,    36,    37,    37,    38,    38,
+      39,    40,    40,    41,    41,    42,    42,    43,    43,    44,
+      44,    45,    45,    46,    46,    47,    47,    48,    48,    49,
+      49,    50,    50,    51,    51,    51,    52,    52,    53,    53,
+      54,    55,    55,    55,    56,    56,    56,    57,    58,    58,
+      59,    59,    60,    60,    60,    60,    60,    60,    60,    60,
       60,    60,    60,    60,    60,    61,    62,    62,    63,    64,
       65,    66,    66,    66,    67,    68,    68,    68,    69,    69,
       70,    70,    71,    71,    72,    72,    72,    73,    73,    73,
@@ -882,12 +892,13 @@ static const yytype_int8 yyr1[] =
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr2[] =
 {
-       0,     2,     2,     0,     1,     1,     5,     1,     1,     4,
-       3,     0,     1,     3,     2,     0,     3,     0,     4,     2,
-       4,     3,     0,     1,     3,     2,     0,     3,     0,     6,
-       1,     1,     1,     2,     0,     3,     0,     3,     3,     0,
-       4,     0,     3,     2,     0,     1,     1,     4,     2,     1,
-       6,     5,     2,     2,     3,     2,     1,     0,     1,     2,
+       0,     2,     2,     0,     1,     1,     5,     5,     1,     1,
+       4,     3,     0,     1,     3,     2,     0,     3,     0,     4,
+       4,     2,     4,     3,     0,     1,     3,     2,     0,     3,
+       0,     6,     5,     1,     1,     1,     2,     0,     3,     0,
+       3,     3,     0,     2,     4,     0,     3,     3,     2,     0,
+       1,     1,     4,     4,     2,     2,     1,     6,     5,     2,
+       2,     2,     2,     3,     3,     2,     1,     0,     1,     2,
        1,     3,     1,     1,     1,     1,     4,     2,     1,     1,
        2,     0,     3,     0,     1,     3,     3,     1,     3,     3,
        1,     3,     3,     3,     3,     1,     3,     3,     1,     1,
@@ -1468,153 +1479,159 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* CompUnit: CompUnit FuncDef  */
-#line 44 "yacc.y"
+#line 47 "yacc.y"
                                      {
                     addChild((yyvsp[-1].tree_node), (yyvsp[0].tree_node));
                     (yyval.tree_node) = (yyvsp[-1].tree_node);
                   }
-#line 1477 "yacc.tab.c"
+#line 1488 "yacc.tab.c"
     break;
 
   case 3: /* CompUnit: %empty  */
-#line 48 "yacc.y"
+#line 51 "yacc.y"
                                 {
                     (yyval.tree_node) = createTreeNodeLine("CompUnit", yylineno);
                     root = (yyval.tree_node);
                   }
-#line 1486 "yacc.tab.c"
+#line 1497 "yacc.tab.c"
     break;
 
   case 4: /* Decl: ConstDecl  */
-#line 54 "yacc.y"
+#line 57 "yacc.y"
                               {
                     (yyval.tree_node) = createTreeNodeLine("Decl", (yyvsp[0].tree_node)->lineno);
                     addChild((yyval.tree_node), (yyvsp[0].tree_node));
                   }
-#line 1495 "yacc.tab.c"
+#line 1506 "yacc.tab.c"
     break;
 
   case 5: /* Decl: VarDecl  */
-#line 58 "yacc.y"
+#line 61 "yacc.y"
                             {
                     (yyval.tree_node) = createTreeNodeLine("Decl", (yyvsp[0].tree_node)->lineno);
                     addChild((yyval.tree_node), (yyvsp[0].tree_node));
                   }
-#line 1504 "yacc.tab.c"
+#line 1515 "yacc.tab.c"
     break;
 
   case 6: /* ConstDecl: CONST BType ConstDef MoreConstDefs SEMICOLON  */
-#line 64 "yacc.y"
+#line 67 "yacc.y"
                                                                  {
                     (yyval.tree_node) = createTreeNodeLine("VarDecl", (yyvsp[-4].lineno));
                     addChild((yyval.tree_node), (yyvsp[-4].lineno));
                     addChild((yyval.tree_node), createTreeNode("SEMICOLON"));
                   }
-#line 1514 "yacc.tab.c"
+#line 1525 "yacc.tab.c"
     break;
 
-  case 7: /* BType: INT  */
-#line 71 "yacc.y"
+  case 7: /* ConstDecl: CONST BType ConstDef MoreConstDefs error  */
+#line 72 "yacc.y"
+                                                             { yyerror("Missing ';'"); }
+#line 1531 "yacc.tab.c"
+    break;
+
+  case 8: /* BType: INT  */
+#line 75 "yacc.y"
                         {
                     (yyval.tree_node) = createTreeNodeLine("BType", (yyvsp[0].lineno));
                     addChild((yyval.tree_node), createTreeNodeString("Type", yylineno, "int"));
                   }
-#line 1523 "yacc.tab.c"
+#line 1540 "yacc.tab.c"
     break;
 
-  case 8: /* BType: FLOAT  */
-#line 75 "yacc.y"
+  case 9: /* BType: FLOAT  */
+#line 79 "yacc.y"
                           {
                     (yyval.tree_node) = createTreeNodeLine("BType", (yyvsp[0].lineno));
                     addChild((yyval.tree_node), createTreeNodeString("Type", yylineno, "float"));
                   }
-#line 1532 "yacc.tab.c"
+#line 1549 "yacc.tab.c"
     break;
 
-  case 9: /* ConstDef: ID ArraySpecifier ASSIGN ConstInitVal  */
-#line 81 "yacc.y"
+  case 10: /* ConstDef: ID ArraySpecifier ASSIGN ConstInitVal  */
+#line 85 "yacc.y"
                                                           {
                     (yyval.tree_node) = createTreeNodeLine("ConstDef", (yyvsp[-3].string)); 
                     addChild((yyval.tree_node), createTreeNodeString("ID", yylineno, (yyvsp[-3].string)));
                     addChild((yyval.tree_node), createTreeNode("ASSIGN"));
                     addChild((yyval.tree_node), (yyvsp[0].tree_node));
                   }
-#line 1543 "yacc.tab.c"
+#line 1560 "yacc.tab.c"
     break;
 
-  case 10: /* MoreConstDefs: COMMA ConstDef MoreConstDefs  */
-#line 89 "yacc.y"
+  case 11: /* MoreConstDefs: COMMA ConstDef MoreConstDefs  */
+#line 93 "yacc.y"
                                                  {
                     addChild((yyvsp[-1].tree_node), (yyvsp[0].tree_node));
                     (yyval.tree_node) = (yyvsp[-2].lineno);
                   }
-#line 1552 "yacc.tab.c"
+#line 1569 "yacc.tab.c"
     break;
 
-  case 11: /* MoreConstDefs: %empty  */
-#line 93 "yacc.y"
+  case 12: /* MoreConstDefs: %empty  */
+#line 97 "yacc.y"
                                 {
                     (yyval.tree_node) = createTreeNodeLine("MoreConstDefs", yylineno);
                   }
-#line 1560 "yacc.tab.c"
+#line 1577 "yacc.tab.c"
     break;
 
-  case 12: /* ConstInitVal: ConstExp  */
-#line 98 "yacc.y"
+  case 13: /* ConstInitVal: ConstExp  */
+#line 102 "yacc.y"
                              {
                     (yyval.tree_node) = createTreeNodeLine("ConstInitVal", (yyvsp[0].tree_node)->lineno);
                     addChild((yyval.tree_node), (yyvsp[0].tree_node));
                   }
-#line 1569 "yacc.tab.c"
+#line 1586 "yacc.tab.c"
     break;
 
-  case 13: /* ConstInitVal: LBRACE ConstInitValList RBRACE  */
-#line 102 "yacc.y"
+  case 14: /* ConstInitVal: LBRACE ConstInitValList RBRACE  */
+#line 106 "yacc.y"
                                                    {
                     (yyval.tree_node) = createTreeNodeLine("ConstInitVal", (yyvsp[-2].lineno));
                     addChild((yyval.tree_node), createTreeNode("LBRACE"));
                     addChild((yyval.tree_node), (yyvsp[-1].tree_node));
                     addChild((yyval.tree_node), createTreeNode("RBRACE"));
                   }
-#line 1580 "yacc.tab.c"
+#line 1597 "yacc.tab.c"
     break;
 
-  case 14: /* ConstInitValList: ConstInitVal MoreConstInitVals  */
-#line 110 "yacc.y"
+  case 15: /* ConstInitValList: ConstInitVal MoreConstInitVals  */
+#line 114 "yacc.y"
                                                    {
                     addChild((yyvsp[-1].tree_node), (yyvsp[0].tree_node));
                     (yyval.tree_node) = (yyvsp[-1].tree_node);
                   }
-#line 1589 "yacc.tab.c"
-    break;
-
-  case 15: /* ConstInitValList: %empty  */
-#line 114 "yacc.y"
-                                {
-                    (yyval.tree_node) = createTreeNodeLine("ConstInitValList", yylineno);
-                  }
-#line 1597 "yacc.tab.c"
-    break;
-
-  case 16: /* MoreConstInitVals: COMMA ConstInitVal MoreConstInitVals  */
-#line 119 "yacc.y"
-                                                         {
-                    addChild((yyvsp[-2].lineno), (yyvsp[-1].tree_node));
-                    (yyval.tree_node) = (yyvsp[-2].lineno);
-                  }
 #line 1606 "yacc.tab.c"
     break;
 
-  case 17: /* MoreConstInitVals: %empty  */
-#line 123 "yacc.y"
+  case 16: /* ConstInitValList: %empty  */
+#line 118 "yacc.y"
                                 {
-                    (yyval.tree_node) = createTreeNodeLine("MoreConstInitVals", yylineno);
+                    (yyval.tree_node) = createTreeNodeLine("ConstInitValList", yylineno);
                   }
 #line 1614 "yacc.tab.c"
     break;
 
-  case 18: /* VarDecl: BType VarDef MoreVarDefs SEMICOLON  */
-#line 128 "yacc.y"
+  case 17: /* MoreConstInitVals: COMMA ConstInitVal MoreConstInitVals  */
+#line 123 "yacc.y"
+                                                         {
+                    addChild((yyvsp[-2].lineno), (yyvsp[-1].tree_node));
+                    (yyval.tree_node) = (yyvsp[-2].lineno);
+                  }
+#line 1623 "yacc.tab.c"
+    break;
+
+  case 18: /* MoreConstInitVals: %empty  */
+#line 127 "yacc.y"
+                                {
+                    (yyval.tree_node) = createTreeNodeLine("MoreConstInitVals", yylineno);
+                  }
+#line 1631 "yacc.tab.c"
+    break;
+
+  case 19: /* VarDecl: BType VarDef MoreVarDefs SEMICOLON  */
+#line 132 "yacc.y"
                                                        {
                     (yyval.tree_node) = createTreeNodeLine("VarDecl", (yyvsp[-3].tree_node)->lineno);
                     addChild((yyval.tree_node), (yyvsp[-3].tree_node));
@@ -1622,21 +1639,27 @@ yyreduce:
                     addChild((yyval.tree_node), (yyvsp[-1].tree_node));
                     addChild((yyval.tree_node), createTreeNode("SEMICOLON"));
                   }
-#line 1626 "yacc.tab.c"
+#line 1643 "yacc.tab.c"
     break;
 
-  case 19: /* VarDef: ID ArraySpecifier  */
-#line 137 "yacc.y"
+  case 20: /* VarDecl: BType VarDef MoreVarDefs error  */
+#line 139 "yacc.y"
+                                                   { yyerror("Missing ';'"); }
+#line 1649 "yacc.tab.c"
+    break;
+
+  case 21: /* VarDef: ID ArraySpecifier  */
+#line 142 "yacc.y"
                                       {
                     (yyval.tree_node) = createTreeNodeLine("VarDef", yylineno);
                     addChild((yyval.tree_node), createTreeNodeString("ID", yylineno, (yyvsp[-1].string)));
                     addChild((yyval.tree_node), (yyvsp[0].tree_node));
                   }
-#line 1636 "yacc.tab.c"
+#line 1659 "yacc.tab.c"
     break;
 
-  case 20: /* VarDef: ID ArraySpecifier ASSIGN InitVal  */
-#line 142 "yacc.y"
+  case 22: /* VarDef: ID ArraySpecifier ASSIGN InitVal  */
+#line 147 "yacc.y"
                                                      {
                     (yyval.tree_node) = createTreeNodeLine("VarDef", yylineno); 
                     addChild((yyval.tree_node), createTreeNodeString("ID", yylineno, (yyvsp[-3].string)));
@@ -1644,82 +1667,82 @@ yyreduce:
                     addChild((yyval.tree_node), createTreeNode("ASSIGN"));
                     addChild((yyval.tree_node), (yyvsp[0].tree_node));
                   }
-#line 1648 "yacc.tab.c"
+#line 1671 "yacc.tab.c"
     break;
 
-  case 21: /* MoreVarDefs: COMMA VarDef MoreVarDefs  */
-#line 151 "yacc.y"
+  case 23: /* MoreVarDefs: COMMA VarDef MoreVarDefs  */
+#line 156 "yacc.y"
                                              {
                     addChild((yyvsp[-2].lineno), (yyvsp[-1].tree_node));
                     (yyval.tree_node) = (yyvsp[-2].lineno);
                   }
-#line 1657 "yacc.tab.c"
+#line 1680 "yacc.tab.c"
     break;
 
-  case 22: /* MoreVarDefs: %empty  */
-#line 155 "yacc.y"
+  case 24: /* MoreVarDefs: %empty  */
+#line 160 "yacc.y"
                                 {
                     (yyval.tree_node) = createTreeNodeLine("MoreVarDefs", yylineno);
                   }
-#line 1665 "yacc.tab.c"
+#line 1688 "yacc.tab.c"
     break;
 
-  case 23: /* InitVal: Exp  */
-#line 160 "yacc.y"
+  case 25: /* InitVal: Exp  */
+#line 165 "yacc.y"
                         {
                     (yyval.tree_node) = createTreeNodeLine("InitVal", (yyvsp[0].tree_node)->lineno);
                     addChild((yyval.tree_node), (yyvsp[0].tree_node));
                   }
-#line 1674 "yacc.tab.c"
+#line 1697 "yacc.tab.c"
     break;
 
-  case 24: /* InitVal: LBRACE InitValList RBRACE  */
-#line 164 "yacc.y"
+  case 26: /* InitVal: LBRACE InitValList RBRACE  */
+#line 169 "yacc.y"
                                               {
                     (yyval.tree_node) = createTreeNodeLine("InitVal", (yyvsp[-2].lineno));
                     addChild((yyval.tree_node), createTreeNode("LBRACE"));
                     addChild((yyval.tree_node), (yyvsp[-1].tree_node));
                     addChild((yyval.tree_node), createTreeNode("RBRACE"));
                   }
-#line 1685 "yacc.tab.c"
+#line 1708 "yacc.tab.c"
     break;
 
-  case 25: /* InitValList: InitVal MoreInitVals  */
-#line 172 "yacc.y"
+  case 27: /* InitValList: InitVal MoreInitVals  */
+#line 177 "yacc.y"
                                          {
                     addChild((yyvsp[-1].tree_node), (yyvsp[0].tree_node));
                     (yyval.tree_node) = (yyvsp[-1].tree_node);
                   }
-#line 1694 "yacc.tab.c"
+#line 1717 "yacc.tab.c"
     break;
 
-  case 26: /* InitValList: %empty  */
-#line 176 "yacc.y"
+  case 28: /* InitValList: %empty  */
+#line 181 "yacc.y"
                                 {
                     (yyval.tree_node) = createTreeNodeLine("InitValList", yylineno);
                   }
-#line 1702 "yacc.tab.c"
+#line 1725 "yacc.tab.c"
     break;
 
-  case 27: /* MoreInitVals: COMMA InitVal MoreInitVals  */
-#line 181 "yacc.y"
+  case 29: /* MoreInitVals: COMMA InitVal MoreInitVals  */
+#line 186 "yacc.y"
                                                {
                     addChild((yyvsp[-2].lineno), (yyvsp[-1].tree_node));
                     (yyval.tree_node) = (yyvsp[-2].lineno);
                   }
-#line 1711 "yacc.tab.c"
+#line 1734 "yacc.tab.c"
     break;
 
-  case 28: /* MoreInitVals: %empty  */
-#line 185 "yacc.y"
+  case 30: /* MoreInitVals: %empty  */
+#line 190 "yacc.y"
                                 {
                     (yyval.tree_node) = createTreeNodeLine("MoreInitVals", yylineno);
                   }
-#line 1719 "yacc.tab.c"
+#line 1742 "yacc.tab.c"
     break;
 
-  case 29: /* FuncDef: FuncType ID LPAREN FuncFParams RPAREN Block  */
-#line 190 "yacc.y"
+  case 31: /* FuncDef: FuncType ID LPAREN FuncFParams RPAREN Block  */
+#line 195 "yacc.y"
                                                                 {
                     (yyval.tree_node) = createTreeNodeLine("FuncDef", (yyvsp[-5].tree_node)->lineno); 
                     addChild((yyval.tree_node), (yyvsp[-5].tree_node));
@@ -1729,99 +1752,111 @@ yyreduce:
                     addChild((yyval.tree_node), createTreeNode("RPARENT"));
                     addChild((yyval.tree_node), (yyvsp[0].tree_node));
                   }
-#line 1733 "yacc.tab.c"
+#line 1756 "yacc.tab.c"
     break;
 
-  case 30: /* FuncType: VOID  */
-#line 201 "yacc.y"
+  case 32: /* FuncDef: FuncType ID LPAREN FuncFParams error  */
+#line 204 "yacc.y"
+                                                         { yyerror("Missing ')'"); }
+#line 1762 "yacc.tab.c"
+    break;
+
+  case 33: /* FuncType: VOID  */
+#line 207 "yacc.y"
                          {
                     (yyval.tree_node) = createTreeNodeLine("FuncDef", (yyvsp[0].lineno));
                     addChild((yyval.tree_node), createTreeNodeString("Type", (yyvsp[0].lineno), "void"));
                   }
-#line 1742 "yacc.tab.c"
+#line 1771 "yacc.tab.c"
     break;
 
-  case 31: /* FuncType: INT  */
-#line 205 "yacc.y"
+  case 34: /* FuncType: INT  */
+#line 211 "yacc.y"
                         {
                     (yyval.tree_node) = createTreeNodeLine("FuncDef", (yyvsp[0].lineno));
                     addChild((yyval.tree_node), createTreeNodeString("Type", (yyvsp[0].lineno), "int"));
                   }
-#line 1751 "yacc.tab.c"
+#line 1780 "yacc.tab.c"
     break;
 
-  case 32: /* FuncType: FLOAT  */
-#line 209 "yacc.y"
+  case 35: /* FuncType: FLOAT  */
+#line 215 "yacc.y"
                           {
                     (yyval.tree_node) = createTreeNodeLine("FuncDef", (yyvsp[0].lineno));
                     addChild((yyval.tree_node), createTreeNodeString("Type", (yyvsp[0].lineno), "float"));
                   }
-#line 1760 "yacc.tab.c"
+#line 1789 "yacc.tab.c"
     break;
 
-  case 33: /* FuncFParams: FuncFParam MoreFuncFParams  */
-#line 215 "yacc.y"
+  case 36: /* FuncFParams: FuncFParam MoreFuncFParams  */
+#line 221 "yacc.y"
                                                {
                     addChild((yyvsp[-1].tree_node), (yyvsp[0].tree_node));
                     (yyval.tree_node) = (yyvsp[-1].tree_node);
                   }
-#line 1769 "yacc.tab.c"
+#line 1798 "yacc.tab.c"
     break;
 
-  case 34: /* FuncFParams: %empty  */
-#line 219 "yacc.y"
+  case 37: /* FuncFParams: %empty  */
+#line 225 "yacc.y"
                                 {
                     (yyval.tree_node) = createTreeNodeLine("FuncFParams", yylineno);
                   }
-#line 1777 "yacc.tab.c"
+#line 1806 "yacc.tab.c"
     break;
 
-  case 35: /* MoreFuncFParams: COMMA FuncFParam MoreFuncFParams  */
-#line 224 "yacc.y"
+  case 38: /* MoreFuncFParams: COMMA FuncFParam MoreFuncFParams  */
+#line 230 "yacc.y"
                                                      {
                     addChild((yyvsp[-2].lineno), (yyvsp[-1].tree_node));
                     (yyval.tree_node) = (yyvsp[-2].lineno);
                   }
-#line 1786 "yacc.tab.c"
+#line 1815 "yacc.tab.c"
     break;
 
-  case 36: /* MoreFuncFParams: %empty  */
-#line 228 "yacc.y"
+  case 39: /* MoreFuncFParams: %empty  */
+#line 234 "yacc.y"
                                 {
                     (yyval.tree_node) = createTreeNodeLine("MoreFuncFParams", yylineno);
                   }
-#line 1794 "yacc.tab.c"
+#line 1823 "yacc.tab.c"
     break;
 
-  case 37: /* FuncFParam: BType ID ArraySpecifierForParam  */
-#line 233 "yacc.y"
+  case 40: /* FuncFParam: BType ID ArraySpecifierForParam  */
+#line 239 "yacc.y"
                                                     {
                     (yyval.tree_node) = createTreeNodeLine("FuncFParam", (yyvsp[-2].tree_node)); 
                     addChild((yyval.tree_node), (yyvsp[-2].tree_node));
                     addChild((yyval.tree_node), createTreeNodeString("ID", (yyvsp[-1].string), (yyvsp[-1].string)));
                     addChild((yyval.tree_node), (yyvsp[0].tree_node));
                   }
-#line 1805 "yacc.tab.c"
+#line 1834 "yacc.tab.c"
     break;
 
-  case 38: /* ArraySpecifierForParam: LBRACKET RBRACKET ArraySpecifier  */
-#line 241 "yacc.y"
+  case 41: /* ArraySpecifierForParam: LBRACKET RBRACKET ArraySpecifier  */
+#line 247 "yacc.y"
                                                           {
                           (yyval.tree_node) = (yyvsp[0].tree_node);
                         }
-#line 1813 "yacc.tab.c"
+#line 1842 "yacc.tab.c"
     break;
 
-  case 39: /* ArraySpecifierForParam: %empty  */
-#line 244 "yacc.y"
-                                     {
+  case 42: /* ArraySpecifierForParam: %empty  */
+#line 250 "yacc.y"
+                                      {
                           (yyval.tree_node) = createTreeNodeLine("ArraySpecifier", yylineno);
                         }
-#line 1821 "yacc.tab.c"
+#line 1850 "yacc.tab.c"
     break;
 
-  case 40: /* ArraySpecifier: LBRACKET ConstExp RBRACKET ArraySpecifier  */
-#line 249 "yacc.y"
+  case 43: /* ArraySpecifierForParam: LBRACKET error  */
+#line 253 "yacc.y"
+                                         { yyerror("Missing ']'"); }
+#line 1856 "yacc.tab.c"
+    break;
+
+  case 44: /* ArraySpecifier: LBRACKET ConstExp RBRACKET ArraySpecifier  */
+#line 256 "yacc.y"
                                                               {
                     (yyval.tree_node) = createTreeNodeLine("ArraySpecifier", (yyvsp[-3].lineno));
                     addChild((yyval.tree_node), createTreeNode("LBRACKET"));
@@ -1829,65 +1864,74 @@ yyreduce:
                     addChild((yyval.tree_node), createTreeNode("RBRACKET"));
                     addChild((yyval.tree_node), (yyvsp[0].tree_node));
                   }
-#line 1833 "yacc.tab.c"
+#line 1868 "yacc.tab.c"
     break;
 
-  case 41: /* ArraySpecifier: %empty  */
-#line 256 "yacc.y"
+  case 45: /* ArraySpecifier: %empty  */
+#line 263 "yacc.y"
                                 {
-                    (yyval.tree_node) = createTreeNodeLine("ArraySpecifier", yylineno);
+                    (yyval.tree_node) = NULL;
                   }
-#line 1841 "yacc.tab.c"
+#line 1876 "yacc.tab.c"
     break;
 
-  case 42: /* Block: LBRACE BlockItems RBRACE  */
-#line 261 "yacc.y"
+  case 46: /* ArraySpecifier: LBRACKET ConstExp error  */
+#line 266 "yacc.y"
+                                            { yyerror("Missing ']'"); }
+#line 1882 "yacc.tab.c"
+    break;
+
+  case 47: /* Block: LBRACE BlockItems RBRACE  */
+#line 269 "yacc.y"
                                              {
                     (yyval.tree_node) = createTreeNodeLine("Block", (yyvsp[-2].lineno));
                     addChild((yyval.tree_node), createTreeNode("LBRACE"));
                     addChild((yyval.tree_node), (yyvsp[-1].tree_node));
                     addChild((yyval.tree_node), createTreeNode("RBRACE"));
                   }
-#line 1852 "yacc.tab.c"
+#line 1893 "yacc.tab.c"
     break;
 
-  case 43: /* BlockItems: BlockItems BlockItem  */
-#line 269 "yacc.y"
+  case 48: /* BlockItems: BlockItems BlockItem  */
+#line 277 "yacc.y"
                                          {
-                    addChild((yyvsp[-1].tree_node), (yyvsp[0].tree_node));
-                    (yyval.tree_node) = (yyvsp[-1].tree_node);
+                    if ((yyvsp[-1].tree_node) == NULL) (yyval.tree_node) = createTreeNodeLine("BlockItems", yylineno);
+                    else {
+                      addChild((yyvsp[-1].tree_node), (yyvsp[0].tree_node));
+                      (yyval.tree_node) = (yyvsp[-1].tree_node);
+                    }
                   }
-#line 1861 "yacc.tab.c"
+#line 1905 "yacc.tab.c"
     break;
 
-  case 44: /* BlockItems: %empty  */
-#line 273 "yacc.y"
+  case 49: /* BlockItems: %empty  */
+#line 284 "yacc.y"
                                 {
-                    (yyval.tree_node) = createTreeNodeLine("BlockItems", yylineno);
+                    (yyval.tree_node) = NULL;
                   }
-#line 1869 "yacc.tab.c"
+#line 1913 "yacc.tab.c"
     break;
 
-  case 45: /* BlockItem: Decl  */
-#line 278 "yacc.y"
+  case 50: /* BlockItem: Decl  */
+#line 289 "yacc.y"
                          {
                     (yyval.tree_node) = createTreeNodeLine("BlockItem", (yyvsp[0].tree_node)->lineno);
                     addChild((yyval.tree_node), (yyvsp[0].tree_node));
                   }
-#line 1878 "yacc.tab.c"
+#line 1922 "yacc.tab.c"
     break;
 
-  case 46: /* BlockItem: Stmt  */
-#line 282 "yacc.y"
+  case 51: /* BlockItem: Stmt  */
+#line 293 "yacc.y"
                          {
                     (yyval.tree_node) = createTreeNodeLine("BlockItem", (yyvsp[0].tree_node)->lineno);
                     addChild((yyval.tree_node), (yyvsp[0].tree_node));
                   }
-#line 1887 "yacc.tab.c"
+#line 1931 "yacc.tab.c"
     break;
 
-  case 47: /* Stmt: LVal ASSIGN Exp SEMICOLON  */
-#line 288 "yacc.y"
+  case 52: /* Stmt: LVal ASSIGN Exp SEMICOLON  */
+#line 299 "yacc.y"
                                               {
                     (yyval.tree_node) = createTreeNodeLine("Stmt", (yyvsp[-3].tree_node)->lineno);
                     addChild((yyval.tree_node), (yyvsp[-3].tree_node));
@@ -1895,30 +1939,42 @@ yyreduce:
                     addChild((yyval.tree_node), (yyvsp[-1].tree_node));
                     addChild((yyval.tree_node), createTreeNode("SEMICOLON"));
                   }
-#line 1899 "yacc.tab.c"
+#line 1943 "yacc.tab.c"
     break;
 
-  case 48: /* Stmt: Exp SEMICOLON  */
-#line 295 "yacc.y"
+  case 53: /* Stmt: LVal ASSIGN Exp error  */
+#line 306 "yacc.y"
+                                          { yyerror("Missing ';'"); }
+#line 1949 "yacc.tab.c"
+    break;
+
+  case 54: /* Stmt: Exp SEMICOLON  */
+#line 307 "yacc.y"
                                   {
                     (yyval.tree_node) = createTreeNodeLine("Stmt", (yyvsp[-1].tree_node)->lineno);
                     addChild((yyval.tree_node), (yyvsp[-1].tree_node));
                     addChild((yyval.tree_node), createTreeNode("SEMICOLON"));
                   }
-#line 1909 "yacc.tab.c"
+#line 1959 "yacc.tab.c"
     break;
 
-  case 49: /* Stmt: Block  */
-#line 300 "yacc.y"
+  case 55: /* Stmt: Exp error  */
+#line 312 "yacc.y"
+                              { yyerror("Missing ';'"); }
+#line 1965 "yacc.tab.c"
+    break;
+
+  case 56: /* Stmt: Block  */
+#line 313 "yacc.y"
                           {
                     (yyval.tree_node) = createTreeNodeLine("Stmt", (yyvsp[0].tree_node)->lineno);
                     addChild((yyval.tree_node), (yyvsp[0].tree_node));
                   }
-#line 1918 "yacc.tab.c"
+#line 1974 "yacc.tab.c"
     break;
 
-  case 50: /* Stmt: IF LPAREN Cond RPAREN Stmt ElseClause  */
-#line 304 "yacc.y"
+  case 57: /* Stmt: IF LPAREN Cond RPAREN Stmt ElseClause  */
+#line 317 "yacc.y"
                                                           {
                     (yyval.tree_node) = createTreeNodeLine("Stmt", (yyvsp[-5].lineno));
                     addChild((yyval.tree_node), createTreeNode("IF"));
@@ -1928,11 +1984,11 @@ yyreduce:
                     addChild((yyval.tree_node), (yyvsp[-1].tree_node));
                     addChild((yyval.tree_node), (yyvsp[0].tree_node));
                   }
-#line 1932 "yacc.tab.c"
+#line 1988 "yacc.tab.c"
     break;
 
-  case 51: /* Stmt: WHILE LPAREN Cond RPAREN Stmt  */
-#line 313 "yacc.y"
+  case 58: /* Stmt: WHILE LPAREN Cond RPAREN Stmt  */
+#line 326 "yacc.y"
                                                   {
                     (yyval.tree_node) = createTreeNodeLine("Stmt", (yyvsp[-4].lineno));
                     addChild((yyval.tree_node), createTreeNode("WHILE"));
@@ -1941,143 +1997,161 @@ yyreduce:
                     addChild((yyval.tree_node), createTreeNode("RPARENT"));
                     addChild((yyval.tree_node), (yyvsp[0].tree_node));
                   }
-#line 1945 "yacc.tab.c"
+#line 2001 "yacc.tab.c"
     break;
 
-  case 52: /* Stmt: BREAK SEMICOLON  */
-#line 321 "yacc.y"
+  case 59: /* Stmt: BREAK SEMICOLON  */
+#line 334 "yacc.y"
                                     {
                     (yyval.tree_node) = createTreeNodeLine("Stmt", (yyvsp[-1].lineno));
                     addChild((yyval.tree_node), createTreeNode("BREAK"));
                     addChild((yyval.tree_node), createTreeNode("SEMICOLON"));
                   }
-#line 1955 "yacc.tab.c"
+#line 2011 "yacc.tab.c"
     break;
 
-  case 53: /* Stmt: CONTINUE SEMICOLON  */
-#line 326 "yacc.y"
+  case 60: /* Stmt: BREAK error  */
+#line 339 "yacc.y"
+                                { yyerror("Missing ';'"); }
+#line 2017 "yacc.tab.c"
+    break;
+
+  case 61: /* Stmt: CONTINUE SEMICOLON  */
+#line 340 "yacc.y"
                                        {
                     (yyval.tree_node) = createTreeNodeLine("Stmt", (yyvsp[-1].lineno));
                     addChild((yyval.tree_node), createTreeNode("CONTINUE"));
                     addChild((yyval.tree_node), createTreeNode("SEMICOLON"));
                   }
-#line 1965 "yacc.tab.c"
+#line 2027 "yacc.tab.c"
     break;
 
-  case 54: /* Stmt: RETURN ExpOpt SEMICOLON  */
-#line 331 "yacc.y"
+  case 62: /* Stmt: CONTINUE error  */
+#line 345 "yacc.y"
+                                   { yyerror("Missing ';'"); }
+#line 2033 "yacc.tab.c"
+    break;
+
+  case 63: /* Stmt: RETURN ExpOpt SEMICOLON  */
+#line 346 "yacc.y"
                                             {
                     (yyval.tree_node) = createTreeNodeLine("Stmt", (yyvsp[-2].lineno));
                     addChild((yyval.tree_node), createTreeNode("RETURN"));
                     addChild((yyval.tree_node), (yyvsp[-1].tree_node));
                     addChild((yyval.tree_node), createTreeNode("SEMICOLON"));
                   }
-#line 1976 "yacc.tab.c"
+#line 2044 "yacc.tab.c"
     break;
 
-  case 55: /* ElseClause: ELSE Stmt  */
-#line 339 "yacc.y"
+  case 64: /* Stmt: RETURN ExpOpt error  */
+#line 352 "yacc.y"
+                                        { yyerror("Missing ';'"); }
+#line 2050 "yacc.tab.c"
+    break;
+
+  case 65: /* ElseClause: ELSE Stmt  */
+#line 355 "yacc.y"
                               {
                     (yyval.tree_node) = createTreeNodeLine("ElseClause", (yyvsp[-1].lineno));
                     addChild((yyval.tree_node), createTreeNode("ELSE"));
                     addChild((yyval.tree_node), (yyvsp[0].tree_node));
                   }
-#line 1986 "yacc.tab.c"
+#line 2060 "yacc.tab.c"
     break;
 
-  case 56: /* ExpOpt: Exp  */
-#line 346 "yacc.y"
+  case 66: /* ExpOpt: Exp  */
+#line 362 "yacc.y"
                         {
                     (yyval.tree_node) = (yyvsp[0].tree_node);
                   }
-#line 1994 "yacc.tab.c"
+#line 2068 "yacc.tab.c"
     break;
 
-  case 57: /* ExpOpt: %empty  */
-#line 349 "yacc.y"
+  case 67: /* ExpOpt: %empty  */
+#line 365 "yacc.y"
                                 {
                     (yyval.tree_node) = createTreeNodeLine("ExpOpt", yylineno);
                   }
-#line 2002 "yacc.tab.c"
+#line 2076 "yacc.tab.c"
     break;
 
-  case 58: /* Cond: LOrExp  */
-#line 354 "yacc.y"
+  case 68: /* Cond: LOrExp  */
+#line 370 "yacc.y"
                            {
                     (yyval.tree_node) = createTreeNodeLine("Cond", (yyvsp[0].tree_node)->lineno);
                     addChild((yyval.tree_node), (yyvsp[0].tree_node));
                   }
-#line 2011 "yacc.tab.c"
+#line 2085 "yacc.tab.c"
     break;
 
-  case 59: /* LVal: ID ArraySpecifier  */
-#line 360 "yacc.y"
+  case 69: /* LVal: ID ArraySpecifier  */
+#line 376 "yacc.y"
                                       {
                     (yyval.tree_node) = createTreeNodeLine("LVal", yylineno);
                     addChild((yyval.tree_node), createTreeNodeString("ID", yylineno, (yyvsp[-1].string)));
                     addChild((yyval.tree_node), (yyvsp[0].tree_node));
                   }
-#line 2021 "yacc.tab.c"
+#line 2095 "yacc.tab.c"
     break;
 
-  case 60: /* Exp: AddExp  */
-#line 367 "yacc.y"
+  case 70: /* Exp: AddExp  */
+#line 383 "yacc.y"
                            {
                     (yyval.tree_node) = createTreeNodeLine("Exp", (yyvsp[0].tree_node)->lineno);
                     addChild((yyval.tree_node), (yyvsp[0].tree_node));
                   }
-#line 2030 "yacc.tab.c"
+#line 2104 "yacc.tab.c"
     break;
 
-  case 61: /* PrimaryExp: LPAREN Exp RPAREN  */
-#line 373 "yacc.y"
+  case 71: /* PrimaryExp: LPAREN Exp RPAREN  */
+#line 389 "yacc.y"
                                       {
                     (yyval.tree_node) = createTreeNodeLine("PrimaryExp", (yyvsp[-2].lineno));
                     addChild((yyval.tree_node), createTreeNode("LPARENT"));
                     addChild((yyval.tree_node), (yyvsp[-1].tree_node));
                     addChild((yyval.tree_node), createTreeNode("RPARENT"));
                   }
-#line 2041 "yacc.tab.c"
+#line 2115 "yacc.tab.c"
     break;
 
-  case 62: /* PrimaryExp: LVal  */
-#line 379 "yacc.y"
+  case 72: /* PrimaryExp: LVal  */
+#line 395 "yacc.y"
                          {
                     (yyval.tree_node) = createTreeNodeLine("PrimaryExp", (yyvsp[0].tree_node)->lineno);
                     addChild((yyval.tree_node), (yyvsp[0].tree_node));
                   }
-#line 2050 "yacc.tab.c"
+#line 2124 "yacc.tab.c"
     break;
 
-  case 63: /* PrimaryExp: Number  */
-#line 383 "yacc.y"
+  case 73: /* PrimaryExp: Number  */
+#line 399 "yacc.y"
                            {
                     (yyval.tree_node) = createTreeNodeLine("PrimaryExp", (yyvsp[0].tree_node)->lineno);
                     addChild((yyval.tree_node), (yyvsp[0].tree_node));
                   }
-#line 2059 "yacc.tab.c"
+#line 2133 "yacc.tab.c"
     break;
 
-  case 64: /* Number: INTEGER_LITERAL  */
-#line 389 "yacc.y"
+  case 74: /* Number: INTEGER_LITERAL  */
+#line 405 "yacc.y"
                                     {
                     (yyval.tree_node) = createTreeNodeString("Number", yylineno, "int");
                     addChild((yyval.tree_node), createTreeNodeInt("INT", yylineno, (yyvsp[0].intValue)));
                   }
-#line 2068 "yacc.tab.c"
+#line 2142 "yacc.tab.c"
     break;
 
-  case 65: /* UnaryExp: PrimaryExp  */
-#line 395 "yacc.y"
+  case 75: /* UnaryExp: PrimaryExp  */
+#line 411 "yacc.y"
                                {
                     (yyval.tree_node) = createTreeNodeLine("UnaryExp", (yyvsp[0].tree_node)->lineno);
                     addChild((yyval.tree_node), (yyvsp[0].tree_node));
                   }
-#line 2077 "yacc.tab.c"
+#line 2151 "yacc.tab.c"
     break;
 
-  case 66: /* UnaryExp: ID LPAREN FuncRParams RPAREN  */
-#line 399 "yacc.y"
+  case 76: /* UnaryExp: ID LPAREN FuncRParams RPAREN  */
+#line 415 "yacc.y"
                                                  {
                     (yyval.tree_node) = createTreeNodeLine("UnaryExp", (yyvsp[-3].string));
                     addChild((yyval.tree_node), createTreeNodeString("ID", yylineno, (yyvsp[-3].string)));
@@ -2085,244 +2159,244 @@ yyreduce:
                     addChild((yyval.tree_node), (yyvsp[-1].tree_node));
                     addChild((yyval.tree_node), createTreeNode("RPARENT"));
                   }
-#line 2089 "yacc.tab.c"
+#line 2163 "yacc.tab.c"
     break;
 
-  case 67: /* UnaryExp: UnaryOp UnaryExp  */
-#line 406 "yacc.y"
+  case 77: /* UnaryExp: UnaryOp UnaryExp  */
+#line 422 "yacc.y"
                                      {
                     (yyval.tree_node) = createTreeNodeLine("UnaryExp", (yyvsp[-1].tree_node)->lineno);
                     addChild((yyval.tree_node), createTreeNode((yyvsp[-1].tree_node)));
                     addChild((yyval.tree_node), (yyvsp[0].tree_node));
                   }
-#line 2099 "yacc.tab.c"
+#line 2173 "yacc.tab.c"
     break;
 
-  case 68: /* UnaryOp: ADD  */
-#line 413 "yacc.y"
+  case 78: /* UnaryOp: ADD  */
+#line 429 "yacc.y"
                         {
                     (yyval.tree_node) = createTreeNodeString("UnaryOp", yylineno, "+");
                   }
-#line 2107 "yacc.tab.c"
+#line 2181 "yacc.tab.c"
     break;
 
-  case 69: /* UnaryOp: SUB  */
-#line 416 "yacc.y"
+  case 79: /* UnaryOp: SUB  */
+#line 432 "yacc.y"
                         {
                     (yyval.tree_node) = createTreeNodeString("UnaryOp", yylineno, "-");
                   }
-#line 2115 "yacc.tab.c"
+#line 2189 "yacc.tab.c"
     break;
 
-  case 70: /* FuncRParams: Exp MoreFuncRParams  */
-#line 421 "yacc.y"
+  case 80: /* FuncRParams: Exp MoreFuncRParams  */
+#line 437 "yacc.y"
                                         {
-                    (yyval.tree_node) = createTreeNodeLine("FuncRParams", (yyvsp[-1].tree_node))->lineno;
+                    (yyval.tree_node) = createTreeNodeLine("FuncRParams", (yyvsp[-1].tree_node)->lineno);
                     addChild((yyval.tree_node), (yyvsp[-1].tree_node));
                   }
-#line 2124 "yacc.tab.c"
+#line 2198 "yacc.tab.c"
     break;
 
-  case 71: /* FuncRParams: %empty  */
-#line 425 "yacc.y"
+  case 81: /* FuncRParams: %empty  */
+#line 441 "yacc.y"
                                 {
-                    (yyval.tree_node) = createTreeNodeLine("FuncRParams", yylineno);
+                    (yyval.tree_node) = NULL;
                   }
-#line 2132 "yacc.tab.c"
+#line 2206 "yacc.tab.c"
     break;
 
-  case 72: /* MoreFuncRParams: COMMA Exp MoreFuncRParams  */
-#line 430 "yacc.y"
+  case 82: /* MoreFuncRParams: COMMA Exp MoreFuncRParams  */
+#line 446 "yacc.y"
                                               {
                     addChild((yyvsp[-2].lineno), (yyvsp[-1].tree_node));
                     (yyval.tree_node) = (yyvsp[-2].lineno);
                   }
-#line 2141 "yacc.tab.c"
+#line 2215 "yacc.tab.c"
     break;
 
-  case 73: /* MoreFuncRParams: %empty  */
-#line 434 "yacc.y"
+  case 83: /* MoreFuncRParams: %empty  */
+#line 450 "yacc.y"
                                 {
-                    (yyval.tree_node) = createTreeNodeLine("MoreFuncRParams", yylineno);
+                    (yyval.tree_node) = NULL;
                   }
-#line 2149 "yacc.tab.c"
+#line 2223 "yacc.tab.c"
     break;
 
-  case 74: /* MulExp: UnaryExp  */
-#line 439 "yacc.y"
+  case 84: /* MulExp: UnaryExp  */
+#line 455 "yacc.y"
                              {
                     (yyval.tree_node) = createTreeNodeLine("MulExp", (yyvsp[0].tree_node)->lineno);
                     addChild((yyval.tree_node), (yyvsp[0].tree_node));
                   }
-#line 2158 "yacc.tab.c"
+#line 2232 "yacc.tab.c"
     break;
 
-  case 75: /* MulExp: MulExp MUL UnaryExp  */
-#line 443 "yacc.y"
+  case 85: /* MulExp: MulExp MUL UnaryExp  */
+#line 459 "yacc.y"
                                         {
                     (yyval.tree_node) = createTreeNodeLine("MulExp", (yyvsp[-2].tree_node)->lineno);
                     addChild((yyval.tree_node), (yyvsp[-2].tree_node));
                     addChild((yyval.tree_node), createTreeNode("MUL"));
                     addChild((yyval.tree_node), (yyvsp[0].tree_node));
                   }
-#line 2169 "yacc.tab.c"
+#line 2243 "yacc.tab.c"
     break;
 
-  case 76: /* MulExp: MulExp DIV UnaryExp  */
-#line 449 "yacc.y"
+  case 86: /* MulExp: MulExp DIV UnaryExp  */
+#line 465 "yacc.y"
                                         {
                     (yyval.tree_node) = createTreeNodeLine("MulExp", (yyvsp[-2].tree_node)->lineno);
                     addChild((yyval.tree_node), (yyvsp[-2].tree_node));
                     addChild((yyval.tree_node), createTreeNode("DIV"));
                     addChild((yyval.tree_node), (yyvsp[0].tree_node));
                   }
-#line 2180 "yacc.tab.c"
+#line 2254 "yacc.tab.c"
     break;
 
-  case 77: /* AddExp: MulExp  */
-#line 457 "yacc.y"
+  case 87: /* AddExp: MulExp  */
+#line 473 "yacc.y"
                            {
                     (yyval.tree_node) = createTreeNodeLine("AddExp", (yyvsp[0].tree_node)->lineno);
                     addChild((yyval.tree_node), (yyvsp[0].tree_node));
                   }
-#line 2189 "yacc.tab.c"
+#line 2263 "yacc.tab.c"
     break;
 
-  case 78: /* AddExp: AddExp ADD MulExp  */
-#line 461 "yacc.y"
+  case 88: /* AddExp: AddExp ADD MulExp  */
+#line 477 "yacc.y"
                                       {
                     (yyval.tree_node) = createTreeNodeLine("AddExp", (yyvsp[-2].tree_node)->lineno);
                     addChild((yyval.tree_node), (yyvsp[-2].tree_node));
                     addChild((yyval.tree_node), createTreeNode("ADD"));
                     addChild((yyval.tree_node), (yyvsp[0].tree_node));
                   }
-#line 2200 "yacc.tab.c"
+#line 2274 "yacc.tab.c"
     break;
 
-  case 79: /* AddExp: AddExp SUB MulExp  */
-#line 467 "yacc.y"
+  case 89: /* AddExp: AddExp SUB MulExp  */
+#line 483 "yacc.y"
                                       {
                     (yyval.tree_node) = createTreeNodeLine("AddExp", (yyvsp[-2].tree_node)->lineno);
                     addChild((yyval.tree_node), (yyvsp[-2].tree_node));
                     addChild((yyval.tree_node), createTreeNode("SUB"));
                     addChild((yyval.tree_node), (yyvsp[0].tree_node));
                   }
-#line 2211 "yacc.tab.c"
+#line 2285 "yacc.tab.c"
     break;
 
-  case 80: /* RelExp: AddExp  */
-#line 475 "yacc.y"
+  case 90: /* RelExp: AddExp  */
+#line 491 "yacc.y"
                            {
                     (yyval.tree_node) = createTreeNodeLine("RelExp", (yyvsp[0].tree_node)->lineno);
                     addChild((yyval.tree_node), (yyvsp[0].tree_node));
                   }
-#line 2220 "yacc.tab.c"
+#line 2294 "yacc.tab.c"
     break;
 
-  case 81: /* RelExp: RelExp LESS AddExp  */
-#line 479 "yacc.y"
+  case 91: /* RelExp: RelExp LESS AddExp  */
+#line 495 "yacc.y"
                                        {
                     (yyval.tree_node) = createTreeNodeLine("RelExp", (yyvsp[-2].tree_node)->lineno);
                     addChild((yyval.tree_node), (yyvsp[-2].tree_node));
                     addChild((yyval.tree_node), createTreeNode("LESS"));
                     addChild((yyval.tree_node), (yyvsp[0].tree_node));
                   }
-#line 2231 "yacc.tab.c"
+#line 2305 "yacc.tab.c"
     break;
 
-  case 82: /* RelExp: RelExp GREATER AddExp  */
-#line 485 "yacc.y"
+  case 92: /* RelExp: RelExp GREATER AddExp  */
+#line 501 "yacc.y"
                                           {
                     (yyval.tree_node) = createTreeNodeLine("RelExp", (yyvsp[-2].tree_node)->lineno);
                     addChild((yyval.tree_node), (yyvsp[-2].tree_node));
                     addChild((yyval.tree_node), createTreeNode("GREATER"));
                     addChild((yyval.tree_node), (yyvsp[0].tree_node));
                   }
-#line 2242 "yacc.tab.c"
+#line 2316 "yacc.tab.c"
     break;
 
-  case 83: /* RelExp: RelExp LESSEQUAL AddExp  */
-#line 491 "yacc.y"
+  case 93: /* RelExp: RelExp LESSEQUAL AddExp  */
+#line 507 "yacc.y"
                                             {
                     (yyval.tree_node) = createTreeNodeLine("RelExp", (yyvsp[-2].tree_node)->lineno);
                     addChild((yyval.tree_node), (yyvsp[-2].tree_node));
                     addChild((yyval.tree_node), createTreeNode("LESSEQUAL"));
                     addChild((yyval.tree_node), (yyvsp[0].tree_node));
                   }
-#line 2253 "yacc.tab.c"
+#line 2327 "yacc.tab.c"
     break;
 
-  case 84: /* RelExp: RelExp GREATEREQUAL AddExp  */
-#line 497 "yacc.y"
+  case 94: /* RelExp: RelExp GREATEREQUAL AddExp  */
+#line 513 "yacc.y"
                                                {
                     (yyval.tree_node) = createTreeNodeLine("RelExp", (yyvsp[-2].tree_node)->lineno);
                     addChild((yyval.tree_node), (yyvsp[-2].tree_node));
                     addChild((yyval.tree_node), createTreeNode("GREATEREQUAL"));
                     addChild((yyval.tree_node), (yyvsp[0].tree_node));
                   }
-#line 2264 "yacc.tab.c"
+#line 2338 "yacc.tab.c"
     break;
 
-  case 85: /* EqExp: RelExp  */
-#line 505 "yacc.y"
+  case 95: /* EqExp: RelExp  */
+#line 521 "yacc.y"
                            {
                     (yyval.tree_node) = createTreeNodeLine("EqExp", (yyvsp[0].tree_node)->lineno);
                     addChild((yyval.tree_node), (yyvsp[0].tree_node));
                   }
-#line 2273 "yacc.tab.c"
+#line 2347 "yacc.tab.c"
     break;
 
-  case 86: /* EqExp: EqExp EQUAL RelExp  */
-#line 509 "yacc.y"
+  case 96: /* EqExp: EqExp EQUAL RelExp  */
+#line 525 "yacc.y"
                                        {
                     (yyval.tree_node) = createTreeNodeLine("EqExp", (yyvsp[-2].tree_node)->lineno);
                     addChild((yyval.tree_node), (yyvsp[-2].tree_node));
                     addChild((yyval.tree_node), createTreeNode("EQUAL"));
                     addChild((yyval.tree_node), (yyvsp[0].tree_node));
                   }
-#line 2284 "yacc.tab.c"
+#line 2358 "yacc.tab.c"
     break;
 
-  case 87: /* EqExp: EqExp UNEQUAL RelExp  */
-#line 515 "yacc.y"
+  case 97: /* EqExp: EqExp UNEQUAL RelExp  */
+#line 531 "yacc.y"
                                          {
                     (yyval.tree_node) = createTreeNodeLine("EqExp", (yyvsp[-2].tree_node)->lineno);
                     addChild((yyval.tree_node), (yyvsp[-2].tree_node));
                     addChild((yyval.tree_node), createTreeNode("UNEQUAL"));
                     addChild((yyval.tree_node), (yyvsp[0].tree_node));
                   }
-#line 2295 "yacc.tab.c"
+#line 2369 "yacc.tab.c"
     break;
 
-  case 88: /* LAndExp: EqExp  */
-#line 523 "yacc.y"
+  case 98: /* LAndExp: EqExp  */
+#line 539 "yacc.y"
                           {
                     (yyval.tree_node) = createTreeNodeLine("LAndExp", (yyvsp[0].tree_node)->lineno);
                     addChild((yyval.tree_node), (yyvsp[0].tree_node));
                   }
-#line 2304 "yacc.tab.c"
+#line 2378 "yacc.tab.c"
     break;
 
-  case 89: /* LOrExp: LAndExp  */
-#line 529 "yacc.y"
+  case 99: /* LOrExp: LAndExp  */
+#line 545 "yacc.y"
                             {
                     (yyval.tree_node) = createTreeNodeLine("LOrExp", (yyvsp[0].tree_node)->lineno);
                     addChild((yyval.tree_node), (yyvsp[0].tree_node));
                   }
-#line 2313 "yacc.tab.c"
+#line 2387 "yacc.tab.c"
     break;
 
-  case 90: /* ConstExp: AddExp  */
-#line 535 "yacc.y"
+  case 100: /* ConstExp: AddExp  */
+#line 551 "yacc.y"
                            {
                     (yyval.tree_node) = createTreeNodeLine("ConstExp", (yyvsp[0].tree_node)->lineno);
                     addChild((yyval.tree_node), (yyvsp[0].tree_node));
                   }
-#line 2322 "yacc.tab.c"
+#line 2396 "yacc.tab.c"
     break;
 
 
-#line 2326 "yacc.tab.c"
+#line 2400 "yacc.tab.c"
 
       default: break;
     }
@@ -2520,4 +2594,4 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 542 "yacc.y"
+#line 558 "yacc.y"

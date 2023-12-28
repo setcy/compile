@@ -3,6 +3,8 @@
 
 extern int yylineno;
 
+int hasError;
+
 #include "yacc.tab.c"
 #include "lex.yy.c"
 
@@ -23,7 +25,9 @@ int main()
         return 0;
     }
 
-    traverseTree(root, 0);
+    if (!hasError) {
+        traverseTree(root, 0);
+    }
 
     return 0;
 }

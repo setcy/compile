@@ -510,10 +510,12 @@ char *yytext;
 #include <stdio.h>
 #include <stdlib.h>
 
-#line 514 "lex.yy.c"
+extern int hasError;
+
+#line 516 "lex.yy.c"
 /* Prevent the need for linking with -lfl */
 #define YY_NO_INPUT 1
-#line 517 "lex.yy.c"
+#line 519 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -728,10 +730,10 @@ YY_DECL
 		}
 
 	{
-#line 12 "lexical.l"
+#line 14 "lexical.l"
 
 
-#line 735 "lex.yy.c"
+#line 737 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -791,200 +793,200 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 14 "lexical.l"
+#line 16 "lexical.l"
 { ++yylineno;}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 15 "lexical.l"
+#line 17 "lexical.l"
 // ignore whitespace
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 17 "lexical.l"
+#line 19 "lexical.l"
 {char *end; int val = strtol(yytext, &end, 16); yylval.intValue=val; return INTEGER_LITERAL;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 18 "lexical.l"
-printf("Invalid hexadecimal number %s at line %d\n", yytext, yylineno);
+#line 20 "lexical.l"
+{printf("Error type A at Line %d: Invalid hexadecimal number '%s'\n", yylineno, yytext); hasError = 1;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 19 "lexical.l"
+#line 21 "lexical.l"
 {char *end; int val = strtol(yytext, &end, 8); yylval.intValue=val; return INTEGER_LITERAL;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 20 "lexical.l"
-printf("Invalid octal number %s at line %d\n", yytext, yylineno);
+#line 22 "lexical.l"
+{printf("Error type A at Line %d: Invalid octal number '%s'\n", yylineno, yytext); hasError = 1;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 21 "lexical.l"
+#line 23 "lexical.l"
 {char *end; int val = strtol(yytext, &end, 10); yylval.intValue=val; return INTEGER_LITERAL;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 23 "lexical.l"
+#line 25 "lexical.l"
 { yylval.lineno = yylineno; return CONST; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 24 "lexical.l"
+#line 26 "lexical.l"
 { yylval.lineno = yylineno; return INT; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 25 "lexical.l"
+#line 27 "lexical.l"
 { yylval.lineno = yylineno; return FLOAT; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 26 "lexical.l"
+#line 28 "lexical.l"
 { yylval.lineno = yylineno; return VOID; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 27 "lexical.l"
+#line 29 "lexical.l"
 { yylval.lineno = yylineno; return IF; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 28 "lexical.l"
+#line 30 "lexical.l"
 { yylval.lineno = yylineno; return ELSE; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 29 "lexical.l"
+#line 31 "lexical.l"
 { yylval.lineno = yylineno; return WHILE; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 30 "lexical.l"
+#line 32 "lexical.l"
 { yylval.lineno = yylineno; return BREAK; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 31 "lexical.l"
+#line 33 "lexical.l"
 { yylval.lineno = yylineno; return CONTINUE; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 32 "lexical.l"
+#line 34 "lexical.l"
 { yylval.lineno = yylineno; return RETURN; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 34 "lexical.l"
+#line 36 "lexical.l"
 { yylval.lineno = yylineno; return LBRACE; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 35 "lexical.l"
+#line 37 "lexical.l"
 { yylval.lineno = yylineno; return RBRACE; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 36 "lexical.l"
+#line 38 "lexical.l"
 { yylval.lineno = yylineno; return LBRACKET; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 37 "lexical.l"
+#line 39 "lexical.l"
 { yylval.lineno = yylineno; return RBRACKET; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 38 "lexical.l"
+#line 40 "lexical.l"
 { yylval.lineno = yylineno; return LPAREN; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 39 "lexical.l"
+#line 41 "lexical.l"
 { yylval.lineno = yylineno; return RPAREN; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 40 "lexical.l"
+#line 42 "lexical.l"
 { yylval.lineno = yylineno; return COMMA; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 41 "lexical.l"
+#line 43 "lexical.l"
 { yylval.lineno = yylineno; return SEMICOLON; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 42 "lexical.l"
+#line 44 "lexical.l"
 { yylval.lineno = yylineno; return ADD; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 43 "lexical.l"
+#line 45 "lexical.l"
 { yylval.lineno = yylineno; return SUB; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 44 "lexical.l"
+#line 46 "lexical.l"
 { yylval.lineno = yylineno; return MUL; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 45 "lexical.l"
+#line 47 "lexical.l"
 { yylval.lineno = yylineno; return DIV; }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 46 "lexical.l"
+#line 48 "lexical.l"
 { yylval.lineno = yylineno; return ASSIGN; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 47 "lexical.l"
+#line 49 "lexical.l"
 { yylval.lineno = yylineno; return EQUAL; }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 48 "lexical.l"
+#line 50 "lexical.l"
 { yylval.lineno = yylineno; return UNEQUAL; }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 49 "lexical.l"
+#line 51 "lexical.l"
 { yylval.lineno = yylineno; return LESS; }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 50 "lexical.l"
+#line 52 "lexical.l"
 { yylval.lineno = yylineno; return GREATER; }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 51 "lexical.l"
+#line 53 "lexical.l"
 { yylval.lineno = yylineno; return LESSEQUAL; }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 52 "lexical.l"
+#line 54 "lexical.l"
 { yylval.lineno = yylineno; return GREATEREQUAL; }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 54 "lexical.l"
+#line 56 "lexical.l"
 { yylval.string=malloc(strlen(yytext) + 1); strcpy(yylval.string, yytext); return ID;}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 56 "lexical.l"
-printf("Invalid character %c at line %d \n", yytext[0], yylineno);
+#line 58 "lexical.l"
+{printf("Error type A at Line %d: Invalid character '%c'\n", yylineno, yytext[0]); hasError = 1;}
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 57 "lexical.l"
+#line 59 "lexical.l"
 ECHO;
 	YY_BREAK
-#line 988 "lex.yy.c"
+#line 990 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1952,7 +1954,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 57 "lexical.l"
+#line 59 "lexical.l"
 
 
 

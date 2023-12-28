@@ -5,10 +5,13 @@
 
 #include "tree.c"
 
+extern int hasError;
+
 int yylex(void);
 
-void yyerror(const char *str){
-    fprintf(stderr, "error:%s\n",str);
+void yyerror(const char *str) {
+    hasError = 1;
+    fprintf(stderr, "Error type B at Line %d: %s\n", yylineno, str);
 }
 
 TreeNode* root;
@@ -66,6 +69,7 @@ ConstDecl         : CONST BType ConstDef MoreConstDefs SEMICOLON {
                     addChild($$, $1);
                     addChild($$, createTreeNode("SEMICOLON"));
                   }
+                  | CONST BType ConstDef MoreConstDefs error { yyerror("Missing ';'"); }
                   ;
 
 BType             : INT {
@@ -132,6 +136,7 @@ VarDecl           : BType VarDef MoreVarDefs SEMICOLON {
                     addChild($$, $3);
                     addChild($$, createTreeNode("SEMICOLON"));
                   }
+                  | BType VarDef MoreVarDefs error { yyerror("Missing ';'"); }
                   ;
 
 VarDef            : ID ArraySpecifier {
@@ -196,6 +201,7 @@ FuncDef           : FuncType ID LPAREN FuncFParams RPAREN Block {
                     addChild($$, createTreeNode("RPARENT"));
                     addChild($$, $6);
                   }
+                  | FuncType ID LPAREN FuncFParams error { yyerror("Missing ')'"); }
                   ;
 
 FuncType          : VOID {
@@ -241,9 +247,10 @@ FuncFParam        : BType ID ArraySpecifierForParam {
 ArraySpecifierForParam : LBRACKET RBRACKET ArraySpecifier {
                           $$ = $3;
                         }
-                       | /* empty */ {
+                        | /* empty */ {
                           $$ = createTreeNodeLine("ArraySpecifier", yylineno);
                         }
+                        | LBRACKET error { yyerror("Missing ']'"); }
                        ;
 
 ArraySpecifier    : LBRACKET ConstExp RBRACKET ArraySpecifier {
@@ -254,8 +261,9 @@ ArraySpecifier    : LBRACKET ConstExp RBRACKET ArraySpecifier {
                     addChild($$, $4);
                   }
                   | /* empty */ {
-                    $$ = createTreeNodeLine("ArraySpecifier", yylineno);
+                    $$ = NULL;
                   }
+                  | LBRACKET ConstExp error { yyerror("Missing ']'"); }
                   ;
 
 Block             : LBRACE BlockItems RBRACE {
@@ -267,11 +275,14 @@ Block             : LBRACE BlockItems RBRACE {
                   ;
 
 BlockItems        : BlockItems BlockItem {
-                    addChild($1, $2);
-                    $$ = $1;
+                    if ($1 == NULL) $$ = createTreeNodeLine("BlockItems", yylineno);
+                    else {
+                      addChild($1, $2);
+                      $$ = $1;
+                    }
                   }
                   | /* empty */ {
-                    $$ = createTreeNodeLine("BlockItems", yylineno);
+                    $$ = NULL;
                   }
                   ;
 
@@ -292,11 +303,13 @@ Stmt              : LVal ASSIGN Exp SEMICOLON {
                     addChild($$, $3);
                     addChild($$, createTreeNode("SEMICOLON"));
                   }
+                  | LVal ASSIGN Exp error { yyerror("Missing ';'"); }
                   | Exp SEMICOLON {
                     $$ = createTreeNodeLine("Stmt", $1->lineno);
                     addChild($$, $1);
                     addChild($$, createTreeNode("SEMICOLON"));
                   }
+                  | Exp error { yyerror("Missing ';'"); }
                   | Block {
                     $$ = createTreeNodeLine("Stmt", $1->lineno);
                     addChild($$, $1);
@@ -323,17 +336,20 @@ Stmt              : LVal ASSIGN Exp SEMICOLON {
                     addChild($$, createTreeNode("BREAK"));
                     addChild($$, createTreeNode("SEMICOLON"));
                   }
+                  | BREAK error { yyerror("Missing ';'"); }
                   | CONTINUE SEMICOLON {
                     $$ = createTreeNodeLine("Stmt", $1);
                     addChild($$, createTreeNode("CONTINUE"));
                     addChild($$, createTreeNode("SEMICOLON"));
                   }
+                  | CONTINUE error { yyerror("Missing ';'"); }
                   | RETURN ExpOpt SEMICOLON {
                     $$ = createTreeNodeLine("Stmt", $1);
                     addChild($$, createTreeNode("RETURN"));
                     addChild($$, $2);
                     addChild($$, createTreeNode("SEMICOLON"));
                   }
+                  | RETURN ExpOpt error { yyerror("Missing ';'"); }
                   ;
 
 ElseClause        : ELSE Stmt {
@@ -419,11 +435,11 @@ UnaryOp           : ADD {
                   ;
 
 FuncRParams       : Exp MoreFuncRParams {
-                    $$ = createTreeNodeLine("FuncRParams", $1)->lineno;
+                    $$ = createTreeNodeLine("FuncRParams", $1->lineno);
                     addChild($$, $1);
                   }
                   | /* empty */ {
-                    $$ = createTreeNodeLine("FuncRParams", yylineno);
+                    $$ = NULL;
                   }
                   ;
 
@@ -432,7 +448,7 @@ MoreFuncRParams   : COMMA Exp MoreFuncRParams {
                     $$ = $1;
                   }
                   | /* empty */ {
-                    $$ = createTreeNodeLine("MoreFuncRParams", yylineno);
+                    $$ = NULL;
                   }
                   ;
 
