@@ -1,0 +1,15 @@
+int main()
+{
+    int a;
+    int i;
+    int b;
+    a=b+1;
+    if (a==b)
+    {
+        i=1;
+    }
+    else
+    {
+        i=2;
+    }
+}
