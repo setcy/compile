@@ -51,7 +51,7 @@
 "<="                   { yylval.lineno = yylineno; return LESSEQUAL; }
 ">="                   { yylval.lineno = yylineno; return GREATEREQUAL; }
 
-[A-Za-z_][A-Za-z0-9_]*                          {yylval.string=yytext; printf("%s\n", yylval.string); return ID;}
+[A-Za-z_][A-Za-z0-9_]* { yylval.string=malloc(strlen(yytext) + 1); strcpy(yylval.string, yytext); return ID;}
 
 .                             printf("Invalid character %c at line %d \n", yytext[0], yylineno);
 %% 

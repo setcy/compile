@@ -972,7 +972,7 @@ YY_RULE_SETUP
 case 37:
 YY_RULE_SETUP
 #line 54 "lexical.l"
-{yylval.string=yytext; printf("%s\n", yylval.string); return ID;}
+{ yylval.string=malloc(strlen(yytext) + 1); strcpy(yylval.string, yytext); return ID;}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP

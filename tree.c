@@ -17,9 +17,9 @@ typedef struct ChildNode
     struct ChildNode *next;
 } ChildNode;
 
-TreeNode *createTreeNode(char* name)
+TreeNode *createTreeNode(char *name)
 {
-    if(name == NULL)
+    if (name == NULL)
         return NULL;
     TreeNode *newNode = malloc(sizeof(TreeNode));
     newNode->name = name;
@@ -27,13 +27,13 @@ TreeNode *createTreeNode(char* name)
     return newNode;
 }
 
-TreeNode *createTreeNodeLine(char *name, TreeNode *child)
+TreeNode *createTreeNodeLine(char *name, int lineno)
 {
     if (name == NULL)
         return NULL;
     TreeNode *newNode = malloc(sizeof(TreeNode));
     newNode->name = name;
-    //newNode->lineno = child->lineno;
+    newNode->lineno = lineno;
     newNode->children = NULL;
     return newNode;
 }
@@ -52,7 +52,6 @@ TreeNode *createTreeNodeInt(char *name, int line, int value)
 
 TreeNode *createTreeNodeString(char *name, int line, char *value)
 {
-    printf("----%s: %s----\n", name, value);
     if (name == NULL)
         return NULL;
     TreeNode *newNode = malloc(sizeof(TreeNode));
@@ -89,7 +88,8 @@ void traverseTree(TreeNode *root, int depth)
     if (root == NULL)
         return;
 
-    for (int i = 0; i < depth; i++) {
+    for (int i = 0; i < depth; i++)
+    {
         printf("  ");
     }
 

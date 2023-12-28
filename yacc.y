@@ -20,22 +20,24 @@ TreeNode* root;
   double floats;
   char* string;
 
-  TreeNode* tree_node;
   int lineno;
+  TreeNode* tree_node;
 }
 
 %token <lineno> INT FLOAT CONST VOID IF ELSE WHILE BREAK CONTINUE RETURN
 %token <lineno> ASSIGN EQUAL UNEQUAL LESS GREATER LESSEQUAL GREATEREQUAL
+%token <lineno> LBRACE RBRACE LBRACKET RBRACKET LPAREN RPAREN COMMA SEMICOLON ADD SUB MUL DIV 
+
 %token <intValue> INTEGER_LITERAL
 
 %token <string> ID
-%token <lineno> LBRACE RBRACE LBRACKET RBRACKET LPAREN RPAREN COMMA SEMICOLON ADD SUB MUL DIV 
 
 %type <tree_node> CompUnit Decl ConstDecl BType ConstDef MoreConstDefs ConstInitVal MoreConstInitVals ConstInitValList
 %type <tree_node> VarDecl VarDef MoreVarDefs InitVal InitValList MoreInitVals FuncDef FuncType FuncFParams MoreFuncFParams FuncFParam ArraySpecifierForParam
 %type <tree_node> ArraySpecifier Block BlockItems BlockItem Stmt ElseClause ExpOpt Cond LVal Exp PrimaryExp Number UnaryExp UnaryOp FuncRParams MoreFuncRParams
 %type <tree_node> MulExp AddExp RelExp EqExp LAndExp LOrExp ConstExp 
 
+%locations
 
 %%
 
@@ -50,31 +52,35 @@ CompUnit          : CompUnit FuncDef {
                   ;
 
 Decl              : ConstDecl {
-                    $$ = createTreeNodeLine("Decl", yylineno);
+                    $$ = createTreeNodeLine("Decl", $1->lineno);
+                    addChild($$, $1);
                   }
                   | VarDecl {
-                    $$ = createTreeNodeLine("Decl", yylineno);
+                    $$ = createTreeNodeLine("Decl", $1->lineno);
+                    addChild($$, $1);
                   }
                   ;
 
 ConstDecl         : CONST BType ConstDef MoreConstDefs SEMICOLON {
                     $$ = createTreeNodeLine("VarDecl", $1);
+                    addChild($$, $1);
+                    addChild($$, createTreeNode("SEMICOLON"));
                   }
                   ;
 
 BType             : INT {
-                    $$ = createTreeNodeLine("BType", yylineno);
+                    $$ = createTreeNodeLine("BType", $1);
                     addChild($$, createTreeNodeString("Type", yylineno, "int"));
                   }
                   | FLOAT {
-                    $$ = createTreeNodeLine("BType", yylineno);
+                    $$ = createTreeNodeLine("BType", $1);
                     addChild($$, createTreeNodeString("Type", yylineno, "float"));
                   }
                   ;
 
 ConstDef          : ID ArraySpecifier ASSIGN ConstInitVal {
                     $$ = createTreeNodeLine("ConstDef", $1); 
-                    addChild($$, createTreeNodeString("ID1", $1, $1));
+                    addChild($$, createTreeNodeString("ID", yylineno, $1));
                     addChild($$, createTreeNode("ASSIGN"));
                     addChild($$, $4);
                   }
@@ -90,11 +96,11 @@ MoreConstDefs     : COMMA ConstDef MoreConstDefs {
                   ;
 
 ConstInitVal      : ConstExp {
-                    $$ = createTreeNodeLine("ConstInitVal", $1);
+                    $$ = createTreeNodeLine("ConstInitVal", $1->lineno);
                     addChild($$, $1);
                   }
                   | LBRACE ConstInitValList RBRACE {
-                    $$ = createTreeNodeLine("ConstInitVal", yylineno);
+                    $$ = createTreeNodeLine("ConstInitVal", $1);
                     addChild($$, createTreeNode("LBRACE"));
                     addChild($$, $2);
                     addChild($$, createTreeNode("RBRACE"));
@@ -120,18 +126,22 @@ MoreConstInitVals : COMMA ConstInitVal MoreConstInitVals {
                   ;
 
 VarDecl           : BType VarDef MoreVarDefs SEMICOLON {
-                    $$ = createTreeNodeLine("VarDecl", $1);
+                    $$ = createTreeNodeLine("VarDecl", $1->lineno);
+                    addChild($$, $1);
+                    addChild($$, $2);
+                    addChild($$, $3);
+                    addChild($$, createTreeNode("SEMICOLON"));
                   }
                   ;
 
 VarDef            : ID ArraySpecifier {
-                    $$ = createTreeNodeLine("VarDef", $1);
-                    addChild($$, createTreeNodeString("ID2", $1, $1));
+                    $$ = createTreeNodeLine("VarDef", yylineno);
+                    addChild($$, createTreeNodeString("ID", yylineno, $1));
                     addChild($$, $2);
                   }
                   | ID ArraySpecifier ASSIGN InitVal {
-                    $$ = createTreeNodeLine("VarDef", $1); 
-                    addChild($$, createTreeNodeString("ID3", $1, $1));
+                    $$ = createTreeNodeLine("VarDef", yylineno); 
+                    addChild($$, createTreeNodeString("ID", yylineno, $1));
                     addChild($$, $2);
                     addChild($$, createTreeNode("ASSIGN"));
                     addChild($$, $4);
@@ -148,7 +158,7 @@ MoreVarDefs       : COMMA VarDef MoreVarDefs {
                   ;
 
 InitVal           : Exp {
-                    $$ = createTreeNodeLine("InitVal", $1);
+                    $$ = createTreeNodeLine("InitVal", $1->lineno);
                     addChild($$, $1);
                   }
                   | LBRACE InitValList RBRACE {
@@ -178,9 +188,9 @@ MoreInitVals      : COMMA InitVal MoreInitVals {
                   ;
 
 FuncDef           : FuncType ID LPAREN FuncFParams RPAREN Block {
-                    $$ = createTreeNodeLine("FuncDef", $1); 
+                    $$ = createTreeNodeLine("FuncDef", $1->lineno); 
                     addChild($$, $1);
-                    addChild($$, createTreeNodeString("ID4", $2, $2));
+                    addChild($$, createTreeNodeString("ID", $2, $2));
                     addChild($$, createTreeNode("LPARENT"));
                     addChild($$, $4);
                     addChild($$, createTreeNode("RPARENT"));
@@ -189,16 +199,16 @@ FuncDef           : FuncType ID LPAREN FuncFParams RPAREN Block {
                   ;
 
 FuncType          : VOID {
-                    $$ = createTreeNodeLine("FuncDef", yylineno);
-                    addChild($$, createTreeNodeString("Type", yylineno, "void"));
+                    $$ = createTreeNodeLine("FuncDef", $1);
+                    addChild($$, createTreeNodeString("Type", $1, "void"));
                   }
                   | INT {
-                    $$ = createTreeNodeLine("FuncDef", yylineno);
-                    addChild($$, createTreeNodeString("Type", yylineno, "int"));
+                    $$ = createTreeNodeLine("FuncDef", $1);
+                    addChild($$, createTreeNodeString("Type", $1, "int"));
                   }
                   | FLOAT {
-                    $$ = createTreeNodeLine("FuncDef", yylineno);
-                    addChild($$, createTreeNodeString("Type", yylineno, "float"));
+                    $$ = createTreeNodeLine("FuncDef", $1);
+                    addChild($$, createTreeNodeString("Type", $1, "float"));
                   }
                   ;
 
@@ -223,7 +233,7 @@ MoreFuncFParams   : COMMA FuncFParam MoreFuncFParams {
 FuncFParam        : BType ID ArraySpecifierForParam {
                     $$ = createTreeNodeLine("FuncFParam", $1); 
                     addChild($$, $1);
-                    addChild($$, createTreeNodeString("ID5", $2, $2));
+                    addChild($$, createTreeNodeString("ID", $2, $2));
                     addChild($$, $3);
                   }
                   ;
@@ -256,7 +266,7 @@ Block             : LBRACE BlockItems RBRACE {
                   }
                   ;
 
-BlockItems        : BlockItem BlockItems {
+BlockItems        : BlockItems BlockItem {
                     addChild($1, $2);
                     $$ = $1;
                   }
@@ -266,25 +276,30 @@ BlockItems        : BlockItem BlockItems {
                   ;
 
 BlockItem         : Decl {
-                    $$ = createTreeNodeLine("BlockItem", $1);
+                    $$ = createTreeNodeLine("BlockItem", $1->lineno);
+                    addChild($$, $1);
                   }
                   | Stmt {
-                    $$ = createTreeNodeLine("BlockItem", $1);
+                    $$ = createTreeNodeLine("BlockItem", $1->lineno);
+                    addChild($$, $1);
                   }
                   ;
 
 Stmt              : LVal ASSIGN Exp SEMICOLON {
-                    $$ = createTreeNodeLine("Stmt", $1);
+                    $$ = createTreeNodeLine("Stmt", $1->lineno);
                     addChild($$, $1);
                     addChild($$, createTreeNode("ASSIGN"));
                     addChild($$, $3);
+                    addChild($$, createTreeNode("SEMICOLON"));
                   }
                   | Exp SEMICOLON {
-                    $$ = createTreeNodeLine("Stmt", $1);
+                    $$ = createTreeNodeLine("Stmt", $1->lineno);
                     addChild($$, $1);
+                    addChild($$, createTreeNode("SEMICOLON"));
                   }
                   | Block {
-                    $$ = createTreeNodeLine("Stmt", $1);
+                    $$ = createTreeNodeLine("Stmt", $1->lineno);
+                    addChild($$, $1);
                   }
                   | IF LPAREN Cond RPAREN Stmt ElseClause {
                     $$ = createTreeNodeLine("Stmt", $1);
@@ -306,15 +321,18 @@ Stmt              : LVal ASSIGN Exp SEMICOLON {
                   | BREAK SEMICOLON {
                     $$ = createTreeNodeLine("Stmt", $1);
                     addChild($$, createTreeNode("BREAK"));
+                    addChild($$, createTreeNode("SEMICOLON"));
                   }
                   | CONTINUE SEMICOLON {
                     $$ = createTreeNodeLine("Stmt", $1);
                     addChild($$, createTreeNode("CONTINUE"));
+                    addChild($$, createTreeNode("SEMICOLON"));
                   }
                   | RETURN ExpOpt SEMICOLON {
                     $$ = createTreeNodeLine("Stmt", $1);
                     addChild($$, createTreeNode("RETURN"));
                     addChild($$, $2);
+                    addChild($$, createTreeNode("SEMICOLON"));
                   }
                   ;
 
@@ -334,20 +352,20 @@ ExpOpt            : Exp {
                   ;
 
 Cond              : LOrExp {
-                    $$ = createTreeNodeLine("Cond", $1);
+                    $$ = createTreeNodeLine("Cond", $1->lineno);
                     addChild($$, $1);
                   }
                   ;
 
 LVal              : ID ArraySpecifier {
-                    $$ = createTreeNodeLine("LVal", $1);
-                    addChild($$, createTreeNodeString("ID6", $1, $1));
+                    $$ = createTreeNodeLine("LVal", yylineno);
+                    addChild($$, createTreeNodeString("ID", yylineno, $1));
                     addChild($$, $2);
                   }
                   ;
 
 Exp               : AddExp {
-                    $$ = createTreeNodeLine("Exp", $1);
+                    $$ = createTreeNodeLine("Exp", $1->lineno);
                     addChild($$, $1);
                   }
                   ;
@@ -359,34 +377,34 @@ PrimaryExp        : LPAREN Exp RPAREN {
                     addChild($$, createTreeNode("RPARENT"));
                   }
                   | LVal {
-                    $$ = createTreeNodeLine("PrimaryExp", $1);
+                    $$ = createTreeNodeLine("PrimaryExp", $1->lineno);
                     addChild($$, $1);
                   }
                   | Number {
-                    $$ = createTreeNodeLine("PrimaryExp", $1);
+                    $$ = createTreeNodeLine("PrimaryExp", $1->lineno);
                     addChild($$, $1);
                   }
                   ;
 
 Number            : INTEGER_LITERAL {
-                    $$ = createTreeNodeString("Number", $1, "int");
-                    addChild($$, createTreeNodeInt("INT", $1, $1));
+                    $$ = createTreeNodeString("Number", yylineno, "int");
+                    addChild($$, createTreeNodeInt("INT", yylineno, $1));
                   }
                   ;
 
 UnaryExp          : PrimaryExp {
-                    $$ = createTreeNodeLine("UnaryExp", $1);
+                    $$ = createTreeNodeLine("UnaryExp", $1->lineno);
                     addChild($$, $1);
                   }
                   | ID LPAREN FuncRParams RPAREN {
                     $$ = createTreeNodeLine("UnaryExp", $1);
-                    addChild($$, createTreeNodeString("ID7", $1, $1));
+                    addChild($$, createTreeNodeString("ID", yylineno, $1));
                     addChild($$, createTreeNode("LPARENT"));
                     addChild($$, $3);
                     addChild($$, createTreeNode("RPARENT"));
                   }
                   | UnaryOp UnaryExp {
-                    $$ = createTreeNodeLine("UnaryExp", $1);
+                    $$ = createTreeNodeLine("UnaryExp", $1->lineno);
                     addChild($$, createTreeNode($1));
                     addChild($$, $2);
                   }
@@ -401,7 +419,7 @@ UnaryOp           : ADD {
                   ;
 
 FuncRParams       : Exp MoreFuncRParams {
-                    $$ = createTreeNodeLine("FuncRParams", $1);
+                    $$ = createTreeNodeLine("FuncRParams", $1)->lineno;
                     addChild($$, $1);
                   }
                   | /* empty */ {
@@ -419,17 +437,17 @@ MoreFuncRParams   : COMMA Exp MoreFuncRParams {
                   ;
 
 MulExp            : UnaryExp {
-                    $$ = createTreeNodeLine("MulExp", $1);
+                    $$ = createTreeNodeLine("MulExp", $1->lineno);
                     addChild($$, $1);
                   }
                   | MulExp MUL UnaryExp {
-                    $$ = createTreeNodeLine("MulExp", $1);
+                    $$ = createTreeNodeLine("MulExp", $1->lineno);
                     addChild($$, $1);
                     addChild($$, createTreeNode("MUL"));
                     addChild($$, $3);
                   }
                   | MulExp DIV UnaryExp {
-                    $$ = createTreeNodeLine("MulExp", $1);
+                    $$ = createTreeNodeLine("MulExp", $1->lineno);
                     addChild($$, $1);
                     addChild($$, createTreeNode("DIV"));
                     addChild($$, $3);
@@ -437,17 +455,17 @@ MulExp            : UnaryExp {
                   ;
  
 AddExp            : MulExp {
-                    $$ = createTreeNodeLine("AddExp", $1);
+                    $$ = createTreeNodeLine("AddExp", $1->lineno);
                     addChild($$, $1);
                   }
                   | AddExp ADD MulExp {
-                    $$ = createTreeNodeLine("AddExp", $1);
+                    $$ = createTreeNodeLine("AddExp", $1->lineno);
                     addChild($$, $1);
                     addChild($$, createTreeNode("ADD"));
                     addChild($$, $3);
                   }
                   | AddExp SUB MulExp {
-                    $$ = createTreeNodeLine("AddExp", $1);
+                    $$ = createTreeNodeLine("AddExp", $1->lineno);
                     addChild($$, $1);
                     addChild($$, createTreeNode("SUB"));
                     addChild($$, $3);
@@ -455,29 +473,29 @@ AddExp            : MulExp {
                   ;
 
 RelExp            : AddExp {
-                    $$ = createTreeNodeLine("RelExp", $1);
+                    $$ = createTreeNodeLine("RelExp", $1->lineno);
                     addChild($$, $1);
                   }
                   | RelExp LESS AddExp {
-                    $$ = createTreeNodeLine("RelExp", $1);
+                    $$ = createTreeNodeLine("RelExp", $1->lineno);
                     addChild($$, $1);
                     addChild($$, createTreeNode("LESS"));
                     addChild($$, $3);
                   }
                   | RelExp GREATER AddExp {
-                    $$ = createTreeNodeLine("RelExp", $1);
+                    $$ = createTreeNodeLine("RelExp", $1->lineno);
                     addChild($$, $1);
                     addChild($$, createTreeNode("GREATER"));
                     addChild($$, $3);
                   }
                   | RelExp LESSEQUAL AddExp {
-                    $$ = createTreeNodeLine("RelExp", $1);
+                    $$ = createTreeNodeLine("RelExp", $1->lineno);
                     addChild($$, $1);
                     addChild($$, createTreeNode("LESSEQUAL"));
                     addChild($$, $3);
                   }
                   | RelExp GREATEREQUAL AddExp {
-                    $$ = createTreeNodeLine("RelExp", $1);
+                    $$ = createTreeNodeLine("RelExp", $1->lineno);
                     addChild($$, $1);
                     addChild($$, createTreeNode("GREATEREQUAL"));
                     addChild($$, $3);
@@ -485,17 +503,17 @@ RelExp            : AddExp {
                   ;
 
 EqExp             : RelExp {
-                    $$ = createTreeNodeLine("EqExp", $1);
+                    $$ = createTreeNodeLine("EqExp", $1->lineno);
                     addChild($$, $1);
                   }
                   | EqExp EQUAL RelExp {
-                    $$ = createTreeNodeLine("EqExp", $1);
+                    $$ = createTreeNodeLine("EqExp", $1->lineno);
                     addChild($$, $1);
                     addChild($$, createTreeNode("EQUAL"));
                     addChild($$, $3);
                   }
                   | EqExp UNEQUAL RelExp {
-                    $$ = createTreeNodeLine("EqExp", $1);
+                    $$ = createTreeNodeLine("EqExp", $1->lineno);
                     addChild($$, $1);
                     addChild($$, createTreeNode("UNEQUAL"));
                     addChild($$, $3);
@@ -503,19 +521,19 @@ EqExp             : RelExp {
                   ;
 
 LAndExp           : EqExp {
-                    $$ = createTreeNodeLine("LAndExp", $1);
+                    $$ = createTreeNodeLine("LAndExp", $1->lineno);
                     addChild($$, $1);
                   }
                   ;
 
 LOrExp            : LAndExp {
-                    $$ = createTreeNodeLine("LOrExp", $1);
+                    $$ = createTreeNodeLine("LOrExp", $1->lineno);
                     addChild($$, $1);
                   }
                   ;
 
 ConstExp          : AddExp {
-                    $$ = createTreeNodeLine("ConstExp", $1);
+                    $$ = createTreeNodeLine("ConstExp", $1->lineno);
                     addChild($$, $1);
                   }
                   ;
