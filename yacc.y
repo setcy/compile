@@ -109,6 +109,7 @@ ConstInitVal      : ConstExp {
                     addChild($$, $2);
                     addChild($$, createTreeNode("RBRACE"));
                   }
+                  | LBRACE ConstInitValList error { yyerror("Missing '}'"); }
                   ;
 
 ConstInitValList  : ConstInitVal MoreConstInitVals {
@@ -144,13 +145,14 @@ VarDef            : ID ArraySpecifier {
                     addChild($$, createTreeNodeString("ID", yylineno, $1));
                     addChild($$, $2);
                   }
-                  | ID ArraySpecifier ASSIGN InitVal {
+                  | ID ArraySpecifier ASSIGN InitVal SEMICOLON {
                     $$ = createTreeNodeLine("VarDef", yylineno); 
                     addChild($$, createTreeNodeString("ID", yylineno, $1));
                     addChild($$, $2);
                     addChild($$, createTreeNode("ASSIGN"));
                     addChild($$, $4);
                   }
+                  | ID ArraySpecifier ASSIGN InitVal error { yyerror("Missing ';'"); }
                   ;
 
 MoreVarDefs       : COMMA VarDef MoreVarDefs {
@@ -201,7 +203,7 @@ FuncDef           : FuncType ID LPAREN FuncFParams RPAREN Block {
                     addChild($$, createTreeNode("RPARENT"));
                     addChild($$, $6);
                   }
-                  | FuncType ID LPAREN FuncFParams error { yyerror("Missing ')'"); }
+                  | FuncType ID LPAREN FuncFParams error Block { yyerror("Missing ')'"); }
                   ;
 
 FuncType          : VOID {
@@ -219,20 +221,22 @@ FuncType          : VOID {
                   ;
 
 FuncFParams       : FuncFParam MoreFuncFParams {
-                    addChild($1, $2);
-                    $$ = $1;
+                    $$ = createTreeNodeLine("FuncFParams", yylineno);
+                    addChild($$, $1);
+                    addChild($$, $2);
                   }
                   | /* empty */ {
-                    $$ = createTreeNodeLine("FuncFParams", yylineno);
+                    $$ = NULL;
                   }
                   ;
 
-MoreFuncFParams   : COMMA FuncFParam MoreFuncFParams {
-                    addChild($1, $2);
-                    $$ = $1;
+MoreFuncFParams   : COMMA MoreFuncFParams FuncFParam  {
+                    if ($2 == NULL) $2 = createTreeNodeLine("MoreFuncFParams", yylineno);
+                    addChild($2, $3);
+                    $$ = $2;
                   }
                   | /* empty */ {
-                    $$ = createTreeNodeLine("MoreFuncFParams", yylineno);
+                    $$ = NULL;
                   }
                   ;
 
@@ -250,7 +254,7 @@ ArraySpecifierForParam : LBRACKET RBRACKET ArraySpecifier {
                         | /* empty */ {
                           $$ = createTreeNodeLine("ArraySpecifier", yylineno);
                         }
-                        | LBRACKET error { yyerror("Missing ']'"); }
+                        | LBRACKET error ArraySpecifier { yyerror("Missing ']'"); }
                        ;
 
 ArraySpecifier    : LBRACKET ConstExp RBRACKET ArraySpecifier {
@@ -263,7 +267,7 @@ ArraySpecifier    : LBRACKET ConstExp RBRACKET ArraySpecifier {
                   | /* empty */ {
                     $$ = NULL;
                   }
-                  | LBRACKET ConstExp error { yyerror("Missing ']'"); }
+                  | LBRACKET ConstExp error ArraySpecifier { yyerror("Missing ']'"); }
                   ;
 
 Block             : LBRACE BlockItems RBRACE {
@@ -309,7 +313,6 @@ Stmt              : LVal ASSIGN Exp SEMICOLON {
                     addChild($$, $1);
                     addChild($$, createTreeNode("SEMICOLON"));
                   }
-                  | Exp error { yyerror("Missing ';'"); }
                   | Block {
                     $$ = createTreeNodeLine("Stmt", $1->lineno);
                     addChild($$, $1);
